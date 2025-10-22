@@ -1,0 +1,15 @@
+node_modules/
+.pnpm-store/
+dist/
+build/
+.vite/
+.storybook/
+storybook-static/
+coverage/
+*.log
+*.lock
+.env*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

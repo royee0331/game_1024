@@ -1,0 +1,24 @@
+{
+  "name": "@browser-1024/ui-telemetry",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "source": "src/index.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts"
+    },
+    "./beaconQueue": "./src/beaconQueue.ts"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "lint": "eslint \"src/**/*.{ts,tsx}\""
+  },
+  "dependencies": {
+    "@browser-1024/core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}

@@ -16,6 +16,10 @@ Each payload matches the `TelemetryPayload` interface exported by `@browser-1024
 | `scoreDelta` | Change in score produced by the input. |
 | `boardHash` | Deterministic hash of the 4×4 matrix after resolution. |
 | `latencyMs` | Milliseconds between input capture and animation start. |
+| `deviceCategory` | Indicates `mobile` or `desktop` origin for the move payload. |
+| `gestureType` | Input mechanism used (`swipe` or `tap`). |
+| `orientation` | Orientation (`portrait`/`landscape`) observed when the move completed. |
+| `resumeAt` | Timestamp of the most recent resume event, when present. |
 | `seed` / `seedCursor` | Deterministic RNG metadata for replay verification. |
 | `platform` | `{ userAgent, inputMode }` descriptor for the client. |
 | `timestamp` | ISO-8601 timestamp when the event was recorded. |

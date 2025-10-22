@@ -22,11 +22,11 @@
 
 ## 5. Run automated coverage
 1. `pnpm --filter packages/shared test` – validates persistence helpers.
-2. `pnpm --filter frontend test:e2e -- --grep "mobile"` – runs Playwright mobile suites.
+2. `pnpm --filter frontend test:e2e:mobile` – runs the dedicated Playwright mobile suites across portrait and landscape.
 3. `pnpm --filter frontend test -- --run tests/hooks/useSwipeInput.test.ts` – executes hook-level regression tests.
 4. `pnpm --filter frontend storybook` – open Storybook and review the “Mobile Controls” story at 320px and 768px viewports.
 
 ## 6. Telemetry validation
 1. With the dev server running, open the network inspector and filter for `telemetry` requests.
-2. Perform a swipe and confirm the payload includes `deviceCategory: "mobile"`, `gestureType`, `orientation`, and `latencyMs`.
-3. Repeat after rotating the device to ensure `orientation` updates to `landscape`.
+2. Perform a swipe and confirm the payload includes `deviceCategory: "mobile"`, `gestureType`, `orientation`, `latencyMs`, and `resumeAt` when returning from the background.
+3. Repeat after rotating the device to ensure `orientation` updates to `landscape` and mobile moves flush immediately.

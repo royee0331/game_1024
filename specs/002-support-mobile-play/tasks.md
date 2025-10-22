@@ -17,9 +17,9 @@
 
 **Purpose**: Seed deterministic fixtures and runner hooks that every mobile scenario depends on.
 
-- [ ] T001 Extend mobile fixtures `fixture-mobile-opening-001`, `fixture-mobile-midgame-002`, `fixture-mobile-resume-003` in `frontend/src/fixtures/index.ts`.
-- [ ] T002 Register a `mobile` project with 360×640 and 640×360 viewports in `frontend/playwright.config.ts` for reuse by new specs.
-- [ ] T003 Add a `test:e2e:mobile` script alias in `frontend/package.json` targeting `playwright test --grep "mobile"` to simplify quickstart steps.
+- [X] T001 Extend mobile fixtures `fixture-mobile-opening-001`, `fixture-mobile-midgame-002`, `fixture-mobile-resume-003` in `frontend/src/fixtures/index.ts`.
+- [X] T002 Register a `mobile` project with 360×640 and 640×360 viewports in `frontend/playwright.config.ts` for reuse by new specs.
+- [X] T003 Add a `test:e2e:mobile` script alias in `frontend/package.json` targeting `playwright test --grep "mobile"` to simplify quickstart steps.
 
 ---
 
@@ -27,9 +27,9 @@
 
 **Purpose**: Shared telemetry and test harness updates required before any story work begins.
 
-- [ ] T004 Update `packages/core/src/types.ts` and `packages/ui-telemetry/src/beaconQueue.ts` to accept `deviceCategory`, `gestureType`, `orientation`, and `latencyMs` fields defined in `contracts/mobile-move-event.openapi.yaml`.
-- [ ] T005 [P] Create `frontend/tests/interaction/mobile/testHarness.ts` with helpers for loading fixtures, capturing telemetry, and dispatching pointer/tap gestures.
-- [ ] T006 [P] Define `MobileInteractionLog` interfaces mirroring the contract in `packages/ui-telemetry/src/mobilePayload.ts` and re-export from `packages/ui-telemetry/src/index.ts`.
+- [X] T004 Update `packages/core/src/types.ts` and `packages/ui-telemetry/src/beaconQueue.ts` to accept `deviceCategory`, `gestureType`, `orientation`, and `latencyMs` fields defined in `contracts/mobile-move-event.openapi.yaml`.
+- [X] T005 [P] Create `frontend/tests/interaction/mobile/testHarness.ts` with helpers for loading fixtures, capturing telemetry, and dispatching pointer/tap gestures.
+- [X] T006 [P] Define `MobileInteractionLog` interfaces mirroring the contract in `packages/ui-telemetry/src/mobilePayload.ts` and re-export from `packages/ui-telemetry/src/index.ts`.
 
 ---
 
@@ -41,16 +41,16 @@
 
 ### Tests for User Story 1
 
-- [ ] T007 [P] [US1] Add `frontend/tests/interaction/mobile/swipe.spec.ts` covering the left-swipe scenario with telemetry assertions.
-- [ ] T008 [P] [US1] Write `frontend/src/hooks/__tests__/useSwipeInput.test.ts` ensuring the 60px threshold, multi-touch suppression, and latency capture behave as expected.
-- [ ] T009 [P] [US1] Create `packages/ui-telemetry/tests/mobileTelemetry.test.ts` validating serialization of the mobile move payload including gesture metadata.
+- [X] T007 [P] [US1] Add `frontend/tests/interaction/mobile/swipe.spec.ts` covering the left-swipe scenario with telemetry assertions.
+- [X] T008 [P] [US1] Write `frontend/src/hooks/__tests__/useSwipeInput.test.ts` ensuring the 60px threshold, multi-touch suppression, and latency capture behave as expected.
+- [X] T009 [P] [US1] Create `packages/ui-telemetry/tests/mobileTelemetry.test.ts` validating serialization of the mobile move payload including gesture metadata.
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Refactor `frontend/src/hooks/useSwipeInput.ts` to use the new `TouchInputSession`, pointer/touch fallbacks, and haptic/no-move feedback for sub-40px gestures.
-- [ ] T011 [US1] Update `frontend/src/state/sessionStore.ts` to timestamp gestures, compute `MobileInteractionLog`, enqueue telemetry with `deviceCategory: 'mobile'`, and block duplicate swipes during animations.
-- [ ] T012 [US1] Extend `frontend/src/hooks/useTelemetryQueue.ts` to flush mobile move events immediately after completion and surface latency metrics for announcements.
-- [ ] T013 [US1] Enhance `frontend/src/components/GameAnnouncements.tsx` to announce touch move completions, latency messages, and no-move prompts in Mandarin.
+- [X] T010 [US1] Refactor `frontend/src/hooks/useSwipeInput.ts` to use the new `TouchInputSession`, pointer/touch fallbacks, and haptic/no-move feedback for sub-40px gestures.
+- [X] T011 [US1] Update `frontend/src/state/sessionStore.ts` to timestamp gestures, compute `MobileInteractionLog`, enqueue telemetry with `deviceCategory: 'mobile'`, and block duplicate swipes during animations.
+- [X] T012 [US1] Extend `frontend/src/hooks/useTelemetryQueue.ts` to flush mobile move events immediately after completion and surface latency metrics for announcements.
+- [X] T013 [US1] Enhance `frontend/src/components/GameAnnouncements.tsx` to announce touch move completions, latency messages, and no-move prompts in Mandarin.
 
 **Checkpoint**: User Story 1 playable via touch swipe with deterministic merges and telemetry.
 
@@ -64,16 +64,16 @@
 
 ### Tests for User Story 2
 
-- [ ] T014 [P] [US2] Create `frontend/tests/interaction/mobile/tap-controls.spec.ts` validating tap-to-move flow and HUD updates.
-- [ ] T015 [P] [US2] Add `frontend/tests/accessibility/mobile-controls.a11y.spec.ts` to audit ARIA labels and focus order for the overlay buttons.
+- [X] T014 [P] [US2] Create `frontend/tests/interaction/mobile/tap-controls.spec.ts` validating tap-to-move flow and HUD updates.
+- [X] T015 [P] [US2] Add `frontend/tests/accessibility/mobile-controls.a11y.spec.ts` to audit ARIA labels and focus order for the overlay buttons.
 
 ### Implementation for User Story 2
 
-- [ ] T016 [US2] Build `frontend/src/components/MobileControls.tsx` with four 44×44px buttons, aria labels, and haptic hooks for single-handed play.
-- [ ] T017 [US2] Integrate `MobileControls` into `frontend/src/scenes/GameScene.tsx`, including a HUD toggle and focus management for assistive users.
-- [ ] T018 [US2] Introduce responsive styles in `frontend/src/styles/mobile.css` so controls anchor to the safe area bottom in portrait and side in landscape.
-- [ ] T019 [US2] Extend `frontend/src/state/sessionStore.ts` to enqueue tap-driven `MoveCommand`s with `gestureType: 'tap'` and maintain telemetry parity with swipes.
-- [ ] T020 [US2] Publish `frontend/stories/MobileControls.stories.tsx` showcasing portrait and landscape layouts with Storybook viewport controls.
+- [X] T016 [US2] Build `frontend/src/components/MobileControls.tsx` with four 44×44px buttons, aria labels, and haptic hooks for single-handed play.
+- [X] T017 [US2] Integrate `MobileControls` into `frontend/src/scenes/GameScene.tsx`, including a HUD toggle and focus management for assistive users.
+- [X] T018 [US2] Introduce responsive styles in `frontend/src/styles/mobile.css` so controls anchor to the safe area bottom in portrait and side in landscape.
+- [X] T019 [US2] Extend `frontend/src/state/sessionStore.ts` to enqueue tap-driven `MoveCommand`s with `gestureType: 'tap'` and maintain telemetry parity with swipes.
+- [X] T020 [US2] Publish `frontend/stories/MobileControls.stories.tsx` showcasing portrait and landscape layouts with Storybook viewport controls.
 
 **Checkpoint**: Mobile controls usable with taps, accessible, and recorded in telemetry independently of swipes.
 
@@ -87,16 +87,16 @@
 
 ### Tests for User Story 3
 
-- [ ] T021 [P] [US3] Implement `frontend/tests/interaction/mobile/orientation-resume.spec.ts` validating rotation layout and resume toast behavior.
-- [ ] T022 [P] [US3] Add `packages/shared/tests/localSession.mobileResume.test.ts` covering persistence of gesture queues, `lastVisibleAt`, and orientation metadata.
+- [X] T021 [P] [US3] Implement `frontend/tests/interaction/mobile/orientation-resume.spec.ts` validating rotation layout and resume toast behavior.
+- [X] T022 [P] [US3] Add `packages/shared/tests/localSession.mobileResume.test.ts` covering persistence of gesture queues, `lastVisibleAt`, and orientation metadata.
 
 ### Implementation for User Story 3
 
-- [ ] T023 [US3] Create `frontend/src/hooks/useMobileViewport.ts` capturing orientation, safe-area insets, and debounced resize events for consumers.
-- [ ] T024 [US3] Update `frontend/src/styles/mobile.css` and `frontend/src/components/TileGrid.tsx` to honor `ViewportLayoutProfile` sizing during orientation changes.
-- [ ] T025 [US3] Extend `packages/shared/src/storage/localSession.ts` to persist `ResumeSnapshot` fields (`gestureQueue`, `lastVisibleAt`, `orientation`).
-- [ ] T026 [US3] Wire `frontend/src/state/sessionStore.ts` to listen for `visibilitychange`, hydrate resume snapshots, and emit resume telemetry timestamps.
-- [ ] T027 [US3] Enhance `frontend/src/components/GameAnnouncements.tsx` to queue and expire resume toasts without duplicating high-priority messages.
+- [X] T023 [US3] Create `frontend/src/hooks/useMobileViewport.ts` capturing orientation, safe-area insets, and debounced resize events for consumers.
+- [X] T024 [US3] Update `frontend/src/styles/mobile.css` and `frontend/src/components/TileGrid.tsx` to honor `ViewportLayoutProfile` sizing during orientation changes.
+- [X] T025 [US3] Extend `packages/shared/src/storage/localSession.ts` to persist `ResumeSnapshot` fields (`gestureQueue`, `lastVisibleAt`, `orientation`).
+- [X] T026 [US3] Wire `frontend/src/state/sessionStore.ts` to listen for `visibilitychange`, hydrate resume snapshots, and emit resume telemetry timestamps.
+- [X] T027 [US3] Enhance `frontend/src/components/GameAnnouncements.tsx` to queue and expire resume toasts without duplicating high-priority messages.
 
 **Checkpoint**: Orientation changes and background resumes leave gameplay intact with accurate messaging and telemetry.
 
@@ -106,9 +106,11 @@
 
 **Purpose**: Finalize documentation, visual coverage, and cross-story verifications.
 
-- [ ] T028 [P] Document mobile quickstart instructions and telemetry fields in `specs/002-support-mobile-play/quickstart.md` and `packages/ui-telemetry/README.md`.
-- [ ] T029 Consolidate Storybook responsive snapshots and update `frontend/tests/visual/` baselines for mobile layouts.
-- [ ] T030 Verify quickstart flow by running `pnpm test:e2e:mobile` and `pnpm --filter frontend test -- --run frontend/src/hooks/__tests__/useSwipeInput.test.ts` with notes in `specs/002-support-mobile-play/tasks.md`.
+- [X] T028 [P] Document mobile quickstart instructions and telemetry fields in `specs/002-support-mobile-play/quickstart.md` and `packages/ui-telemetry/README.md`.
+- [X] T029 Consolidate Storybook responsive snapshots and update `frontend/tests/visual/` baselines for mobile layouts.
+- [X] T030 Verify quickstart flow by running `pnpm test:e2e:mobile` and `pnpm --filter frontend test -- --run frontend/src/hooks/__tests__/useSwipeInput.test.ts` with notes in `specs/002-support-mobile-play/tasks.md`.
+  - `pnpm --filter frontend test -- --run src/hooks/__tests__/useSwipeInput.test.ts`
+  - `pnpm --filter frontend test:e2e:mobile` *(after installing Playwright browsers + deps; four legacy desktop keyboard/game-over specs still failing due to announcement focus regression and missing new-tile markers — see Playwright output for details)*
 
 ---
 

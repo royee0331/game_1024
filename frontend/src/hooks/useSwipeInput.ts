@@ -6,10 +6,13 @@ interface SwipeState {
   pointerId: number | null;
   startX: number;
   startY: number;
+  startTime: number;
+  resolvedDirection: Direction | null;
   triggered: boolean;
 }
 
-const MIN_DISTANCE = 28;
+const MIN_DISTANCE = 60;
+const NO_MOVE_THRESHOLD = 40;
 
 function resolveDirection(deltaX: number, deltaY: number): Direction | null {
   const absX = Math.abs(deltaX);
@@ -32,8 +35,28 @@ function resolveDirection(deltaX: number, deltaY: number): Direction | null {
 export function useSwipeInput(): void {
   const enqueueMove = useSessionStore((state) => state.enqueueMove);
   const isAnimating = useSessionStore((state) => state.isAnimating);
+  const orientation = useSessionStore((state) => state.orientation);
+  const setNoMovePrompt = useSessionStore((state) => state.setNoMovePrompt);
   const lockRef = useRef(false);
-  const swipeRef = useRef<SwipeState>({ pointerId: null, startX: 0, startY: 0, triggered: false });
+  const swipeRef = useRef<SwipeState>({
+    pointerId: null,
+    startX: 0,
+    startY: 0,
+    startTime: 0,
+    resolvedDirection: null,
+    triggered: false
+  });
+
+  const resetSwipe = () => {
+    swipeRef.current = {
+      pointerId: null,
+      startX: 0,
+      startY: 0,
+      startTime: 0,
+      resolvedDirection: null,
+      triggered: false
+    };
+  };
 
   useEffect(() => {
     if (!isAnimating) {
@@ -51,10 +74,16 @@ export function useSwipeInput(): void {
       if (event.pointerType !== 'touch') {
         return;
       }
+      const swipe = swipeRef.current;
+      if (swipe.pointerId !== null && swipe.pointerId !== event.pointerId) {
+        return;
+      }
       swipeRef.current = {
         pointerId: event.pointerId,
         startX: event.clientX,
         startY: event.clientY,
+        startTime: typeof performance !== 'undefined' ? performance.now() : Date.now(),
+        resolvedDirection: null,
         triggered: false
       };
     };
@@ -71,29 +100,47 @@ export function useSwipeInput(): void {
         return;
       }
       swipe.triggered = true;
+      swipe.resolvedDirection = direction;
       lockRef.current = true;
       event.preventDefault();
-      enqueueMove(direction, 'touch');
+      const now = typeof performance !== 'undefined' ? performance.now() : Date.now();
+      const latency = Math.max(0, now - swipe.startTime);
+      enqueueMove(direction, 'touch', {
+        gestureType: 'swipe',
+        startedAt: swipe.startTime,
+        latencyMs: latency,
+        deviceCategory: 'mobile',
+        orientation
+      });
+      setNoMovePrompt(null);
     };
 
-    const resetSwipe = (event: PointerEvent) => {
+    const handlePointerEnd = (event: PointerEvent) => {
       const swipe = swipeRef.current;
       if (swipe.pointerId !== event.pointerId) {
         return;
       }
-      swipeRef.current = { pointerId: null, startX: 0, startY: 0, triggered: false };
+      if (!swipe.triggered) {
+        const deltaX = event.clientX - swipe.startX;
+        const deltaY = event.clientY - swipe.startY;
+        if (Math.max(Math.abs(deltaX), Math.abs(deltaY)) >= NO_MOVE_THRESHOLD) {
+          event.preventDefault();
+          setNoMovePrompt(Date.now());
+        }
+      }
+      resetSwipe();
     };
 
     window.addEventListener('pointerdown', handlePointerDown, { passive: true });
     window.addEventListener('pointermove', handlePointerMove, { passive: false });
-    window.addEventListener('pointerup', resetSwipe, { passive: true });
-    window.addEventListener('pointercancel', resetSwipe, { passive: true });
+    window.addEventListener('pointerup', handlePointerEnd, { passive: true });
+    window.addEventListener('pointercancel', handlePointerEnd, { passive: true });
 
     return () => {
       window.removeEventListener('pointerdown', handlePointerDown);
       window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', resetSwipe);
-      window.removeEventListener('pointercancel', resetSwipe);
+      window.removeEventListener('pointerup', handlePointerEnd);
+      window.removeEventListener('pointercancel', handlePointerEnd);
     };
-  }, [enqueueMove]);
+  }, [enqueueMove, orientation, setNoMovePrompt]);
 }

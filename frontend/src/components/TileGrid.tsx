@@ -2,19 +2,18 @@ import React, { useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { GameState, Tile } from '@core/types';
 import { useSessionStore } from '../state/sessionStore';
+import type { ViewportLayoutProfile } from '../hooks/useMobileViewport';
 import '../styles/tile-grid.css';
 
 interface TileGridProps {
   board: GameState['board'];
+  layout?: ViewportLayoutProfile;
 }
 
-const TILE_SIZE = 86;
-const TILE_GAP = 12;
-
-function positionFor(tile: Tile) {
+function positionFor(tile: Tile, size: number, gap: number) {
   return {
-    x: tile.col * (TILE_SIZE + TILE_GAP),
-    y: tile.row * (TILE_SIZE + TILE_GAP)
+    x: tile.col * (size + gap),
+    y: tile.row * (size + gap)
   };
 }
 
@@ -50,9 +49,13 @@ const getTileTone = (value: number): string => {
   return 'tile--accent';
 };
 
-export const TileGrid: React.FC<TileGridProps> = ({ board }) => {
+export const TileGrid: React.FC<TileGridProps> = ({ board, layout }) => {
   const completeAnimation = useSessionStore((state) => state.completeAnimation);
   const isAnimating = useSessionStore((state) => state.isAnimating);
+  const tileSize = layout?.tileSize ?? 86;
+  const tileGap = layout?.gridGap ?? 12;
+  const containerPadding = tileGap;
+  const containerSize = tileSize * 4 + tileGap * 3 + containerPadding * 2;
 
   useEffect(() => {
     if (!isAnimating) {
@@ -69,7 +72,12 @@ export const TileGrid: React.FC<TileGridProps> = ({ board }) => {
   return (
     <div
       className="tile-grid"
-      style={{ width: TILE_SIZE * 4 + TILE_GAP * 3, height: TILE_SIZE * 4 + TILE_GAP * 3 }}
+      style={{
+        width: containerSize,
+        height: containerSize,
+        '--tile-size': `${tileSize}px`,
+        '--tile-gap': `${tileGap}px`
+      } as React.CSSProperties}
     >
       <div className="tile-grid__background">
         {board.map((row, rowIndex) => (
@@ -82,7 +90,7 @@ export const TileGrid: React.FC<TileGridProps> = ({ board }) => {
       </div>
       <AnimatePresence>
         {tiles.map((tile) => {
-          const position = positionFor(tile);
+          const position = positionFor(tile, tileSize, tileGap);
           return (
             <motion.div
               key={tile.id}

@@ -11,7 +11,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:e2e:mobile": "playwright test --project=mobile --grep \"mobile\""
   },
   "dependencies": {
     "@browser-1024/core": "workspace:*",

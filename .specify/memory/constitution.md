@@ -1,50 +1,89 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Game 1024 Constitution
+<!--
+Sync Impact Report
+Version change: N/A → 1.0.0
+Modified principles: Initial ratification (all principles new)
+Added sections:
+- Core Principles
+- Engineering Standards
+- Delivery Workflow
+- Governance
+Templates requiring updates:
+- ✅ .specify/templates/plan-template.md
+- ✅ .specify/templates/spec-template.md
+- ✅ .specify/templates/tasks-template.md
+Follow-up TODOs: None
+-->
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Deterministic Core Engine (NON-NEGOTIABLE)
+All tile movement, merging, scoring, and win/lose detection MUST be implemented as pure
+functions that accept the full board state and explicit inputs (including RNG state) and
+return the next state plus emitted events. No rendering, timers, or I/O side effects may
+leak into `core/` modules. This guarantees reproducibility, enables exhaustive tests, and
+keeps the engine portable across platforms.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Seeded Random Emergence
+All stochastic behavior (new tile spawns, shuffle mechanics, power-ups) MUST flow through a
+seedable random provider that is injected from the UI shell. The provider MUST default to a
+cryptographically strong source but accept deterministic seeds for testing and replays.
+Implementation MUST surface the seed used for each session and log RNG draws for debugging
+and replay export.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Test-Gated Mechanics
+Board logic, scoring rules, undo/redo stacks, and RNG sequencing MUST be covered by
+executable specs before implementation work starts. Tests MUST prove idempotence,
+commutativity of move compression, and correct event emission for every tile interaction.
+A change is mergeable only when unit tests for core logic, integration tests for the
+interaction loop, and snapshot tests for the UI pass.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Responsive Interaction Loop
+Input handling, animation, and rendering MUST maintain a 16ms budget on the primary target
+platform (desktop browsers). The UI layer MUST process input events synchronously, queue
+state transitions from the core engine, and render animations using requestAnimationFrame.
+Any blocking work MUST run off the main thread (e.g., via Web Workers) to preserve frame
+rate.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Accessible & Observable Play
+The experience MUST remain fully playable via keyboard and touch controls, expose screen
+reader-friendly labels for tiles, and emit structured telemetry for every move. Logs MUST
+include board state hashes, scores, RNG seeds, and latency metrics so regressions can be
+traced. Accessibility regressions block release until resolved.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Engineering Standards
+The canonical implementation uses TypeScript 5+, Vite, and a React-based UI hosted in a
+`frontend/` workspace with a shared `packages/` directory for reusable logic. Core engine
+code lives in `packages/core` with no DOM dependencies. UI composition resides in
+`frontend/src`, while cross-cutting utilities belong in `packages/shared`.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+State is represented as immutable data structures (arrays of tile objects with IDs, value,
+and merge lineage). Engine functions MUST treat inputs as immutable and return new
+instances. Communication between engine and UI happens via declarative events (e.g.,
+`SpawnTile`, `MergeTiles`, `GameOver`).
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+Testing harnesses MUST rely on Vitest for unit coverage, Playwright for interaction tests,
+and Storybook stories for visual regression baselines. Performance budgets target 60 FPS
+with p95 input-to-animation latency under 80ms on reference hardware (Chromium desktop,
+2022 MacBook Air). Build artifacts MUST include source maps and a playable static bundle.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Delivery Workflow
+Every feature begins with a specification that maps user scenarios to deterministic board
+transitions and identifies telemetry needed for observability. Plans MUST document how each
+principle is upheld, including RNG seeding strategy, performance constraints, and
+accessibility accommodations.
+
+Implementation follows this flow: write failing tests for core logic, update Storybook
+examples, implement core modules in `packages/core`, integrate in the React UI, and finally
+wire telemetry exports. Code reviews MUST include constitution compliance checks, verifying
+pure functions, seeded randomness, test coverage, and accessibility instrumentation. Any
+requested waivers MUST include a time-boxed remediation task.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+This constitution supersedes other project practices. Amendments require consensus from the
+core maintainers, documentation of rationale, updated version tags, and validation that all
+templates in `.specify/templates/` remain aligned. Violations discovered during reviews or
+post-release MUST be logged, triaged within one business day, and resolved before the next
+milestone.
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
-
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2025-10-22 | **Last Amended**: 2025-10-22

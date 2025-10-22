@@ -5,7 +5,11 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
-    setupFiles: path.resolve(__dirname, 'tests/engine.setup.ts')
+    setupFiles: path.resolve(__dirname, 'tests/engine.setup.ts'),
+    include: [
+      path.resolve(__dirname, 'tests/**/*.{test,spec}.?(c|m)[jt]s?(x)'),
+      path.resolve(__dirname, '../../tests/unit/**/*.{test,spec}.?(c|m)[jt]s?(x)')
+    ]
   },
   resolve: {
     alias: {

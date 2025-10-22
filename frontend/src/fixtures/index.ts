@@ -73,6 +73,44 @@ const baseFixtures: Record<string, GameState> = {
     status: 'idle',
     sessionId: 'session-fixture',
     lastMoveAt: undefined
+  },
+  'fixture-endgame-003': {
+    board: [
+      [
+        { id: 'e-1', value: 64, row: 0, col: 0, isNew: false },
+        { id: 'e-2', value: 32, row: 0, col: 1, isNew: false },
+        { id: 'e-3', value: 64, row: 0, col: 2, isNew: false },
+        { id: 'e-4', value: 32, row: 0, col: 3, isNew: false }
+      ],
+      [
+        { id: 'e-5', value: 8, row: 1, col: 0, isNew: false },
+        { id: 'e-6', value: 4, row: 1, col: 1, isNew: false },
+        { id: 'e-7', value: 8, row: 1, col: 2, isNew: false },
+        { id: 'e-8', value: 4, row: 1, col: 3, isNew: false }
+      ],
+      [
+        { id: 'e-9', value: 16, row: 2, col: 0, isNew: false },
+        { id: 'e-10', value: 8, row: 2, col: 1, isNew: false },
+        { id: 'e-11', value: 16, row: 2, col: 2, isNew: false },
+        { id: 'e-12', value: 8, row: 2, col: 3, isNew: false }
+      ],
+      [
+        { id: 'e-13', value: 4, row: 3, col: 0, isNew: false },
+        { id: 'e-14', value: 2, row: 3, col: 1, isNew: false },
+        { id: 'e-15', value: 4, row: 3, col: 2, isNew: false },
+        { id: 'e-16', value: 2, row: 3, col: 3, isNew: false }
+      ]
+    ],
+    score: 512,
+    bestScore: 768,
+    moveCount: 32,
+    seed: 'seed-gamma-221022',
+    seedCursor: 64,
+    pendingMoves: [],
+    undoStack: [],
+    status: 'idle',
+    sessionId: 'session-fixture',
+    lastMoveAt: undefined
   }
 };
 

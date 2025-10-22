@@ -71,16 +71,16 @@
 
 ### Tests for User Story 2
 
-- [ ] T019 [P] [US2] Add Playwright mobile swipe spec in `frontend/tests/interaction/touch-swipe.spec.ts` with RNG seed `seed-beta-221022`.
-- [ ] T020 [P] [US2] Create Vitest engine replay spec `tests/unit/engine/swipe-sequence.spec.ts` validating deterministic results for Up → Right sequence.
+- [x] T019 [P] [US2] Add Playwright mobile swipe spec in `frontend/tests/interaction/touch-swipe.spec.ts` with RNG seed `seed-beta-221022`.
+- [x] T020 [P] [US2] Create Vitest engine replay spec `tests/unit/engine/swipe-sequence.spec.ts` validating deterministic results for Up → Right sequence.
 
 ### Implementation for User Story 2
 
-- [ ] T021 [US2] Implement pointer-based swipe detection hook in `frontend/src/hooks/useSwipeInput.ts` with debounce + direction thresholds.
-- [ ] T022 [US2] Extend Zustand session store in `frontend/src/state/sessionStore.ts` to track move counter and persist current state to LocalStorage.
-- [ ] T023 [US2] Update HUD component in `frontend/src/components/Hud.tsx` to display score, best score, and move count with immediate best score promotion.
-- [ ] T024 [US2] Serialize undo history + RNG cursor in `packages/shared/src/storage/localSession.ts` for reload continuity.
-- [ ] T025 [US2] Ensure RNG adapter exposes deterministic cursor advance API in `packages/core/src/random/index.ts` for multi-move sessions.
+- [x] T021 [US2] Implement pointer-based swipe detection hook in `frontend/src/hooks/useSwipeInput.ts` with debounce + direction thresholds.
+- [x] T022 [US2] Extend Zustand session store in `frontend/src/state/sessionStore.ts` to track move counter and persist current state to LocalStorage.
+- [x] T023 [US2] Update HUD component in `frontend/src/components/Hud.tsx` to display score, best score, and move count with immediate best score promotion.
+- [x] T024 [US2] Serialize undo history + RNG cursor in `packages/shared/src/storage/localSession.ts` for reload continuity.
+- [x] T025 [US2] Ensure RNG adapter exposes deterministic cursor advance API in `packages/core/src/random/index.ts` for multi-move sessions.
 
 **Checkpoint**: User Stories 1 and 2 operate independently with persisted progress.
 

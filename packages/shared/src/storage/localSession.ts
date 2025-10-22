@@ -93,6 +93,7 @@ export function hydrateInitialState(baseState: GameState): GameState {
   const bestScore = Math.max(baseState.bestScore, snapshot.state.bestScore ?? 0);
   return {
     ...snapshot.state,
+    seedCursor: snapshot.rngCursor ?? snapshot.state.seedCursor,
     bestScore,
     status: 'idle',
     pendingMoves: []

@@ -1,36 +1,21 @@
 {
   "state": {
     "board": [
-      [
-        { "id": "m-1", "value": 8, "row": 0, "col": 0, "isNew": false },
-        { "id": "m-2", "value": 4, "row": 0, "col": 1, "isNew": false },
-        null,
-        null
-      ],
+      [null, null, null, null],
+      [null, null, null, null],
+      [null, null, null, { "id": "m-1", "value": 4, "row": 2, "col": 3, "isNew": false }],
       [
         null,
-        { "id": "m-3", "value": 16, "row": 1, "col": 1, "isNew": false },
-        { "id": "m-4", "value": 8, "row": 1, "col": 2, "isNew": false },
-        null
-      ],
-      [
-        { "id": "m-5", "value": 2, "row": 2, "col": 0, "isNew": false },
-        null,
-        { "id": "m-6", "value": 4, "row": 2, "col": 2, "isNew": false },
-        null
-      ],
-      [
-        null,
-        null,
-        null,
-        null
+        { "id": "m-2", "value": 2, "row": 3, "col": 1, "isNew": false },
+        { "id": "m-3", "value": 8, "row": 3, "col": 2, "isNew": false },
+        { "id": "m-4", "value": 4, "row": 3, "col": 3, "isNew": false }
       ]
     ],
     "score": 128,
     "bestScore": 256,
     "moveCount": 12,
     "seed": "seed-alpha-221022",
-    "seedCursor": 18,
+    "seedCursor": 0,
     "pendingMoves": [],
     "undoStack": [],
     "status": "idle",

@@ -1,0 +1,341 @@
+openapi: 3.0.3
+info:
+  title: Browser 1024 Gameplay API
+  version: 0.1.0
+  description: Contract between the deterministic core engine and UI/session controller.
+servers:
+  - url: https://localhost/virtual
+paths:
+  /sessions:
+    post:
+      summary: Start a new 1024 session
+      operationId: createSession
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                seed:
+                  type: string
+                  description: Deterministic seed identifier (seed-name-YYMMDD)
+                bestScore:
+                  type: integer
+                  minimum: 0
+                  description: Persisted personal best to carry into the session
+              required:
+                - seed
+      responses:
+        '201':
+          description: Session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionEnvelope'
+  /sessions/{sessionId}/moves:
+    post:
+      summary: Apply a directional move to the current game state
+      operationId: applyMove
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MoveCommand'
+      responses:
+        '200':
+          description: Move applied (or rejected)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  state:
+                    $ref: '#/components/schemas/GameState'
+                  events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EngineEvent'
+                  telemetry:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TelemetryPayload'
+                required:
+                  - state
+                  - events
+                  - telemetry
+  /sessions/{sessionId}/restart:
+    post:
+      summary: Restart the board while preserving best score
+      operationId: restartSession
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                seed:
+                  type: string
+                  description: Seed to initialize the restarted session
+              required:
+                - seed
+      responses:
+        '200':
+          description: Session restarted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionEnvelope'
+  /sessions/{sessionId}/undo:
+    post:
+      summary: Undo the previous committed move if available
+      operationId: undoMove
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Undo applied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionEnvelope'
+        '409':
+          description: Undo not available (no snapshot)
+components:
+  schemas:
+    SessionEnvelope:
+      type: object
+      properties:
+        sessionId:
+          type: string
+        state:
+          $ref: '#/components/schemas/GameState'
+      required:
+        - sessionId
+        - state
+    MoveCommand:
+      type: object
+      properties:
+        direction:
+          type: string
+          enum: [up, down, left, right]
+        requestedAt:
+          type: string
+          format: date-time
+        source:
+          type: string
+          enum: [keyboard, touch, assistive]
+      required:
+        - direction
+        - requestedAt
+    GameState:
+      type: object
+      properties:
+        board:
+          type: array
+          minItems: 4
+          maxItems: 4
+          items:
+            type: array
+            minItems: 4
+            maxItems: 4
+            items:
+              oneOf:
+                - $ref: '#/components/schemas/Tile'
+                - type: 'null'
+        score:
+          type: integer
+          minimum: 0
+        bestScore:
+          type: integer
+          minimum: 0
+        moveCount:
+          type: integer
+          minimum: 0
+        seed:
+          type: string
+        seedCursor:
+          type: integer
+          minimum: 0
+        status:
+          type: string
+          enum: [idle, animating, gameOver]
+        pendingMoves:
+          type: array
+          items:
+            $ref: '#/components/schemas/MoveCommand'
+        undoAvailable:
+          type: boolean
+      required:
+        - board
+        - score
+        - bestScore
+        - moveCount
+        - seed
+        - seedCursor
+        - status
+        - undoAvailable
+    Tile:
+      type: object
+      properties:
+        id:
+          type: string
+        value:
+          type: integer
+          enum: [2,4,8,16,32,64,128,256,512,1024,2048,4096]
+        row:
+          type: integer
+          minimum: 0
+          maximum: 3
+        col:
+          type: integer
+          minimum: 0
+          maximum: 3
+        mergedFrom:
+          type: array
+          items:
+            type: string
+          minItems: 2
+          maxItems: 2
+        isNew:
+          type: boolean
+      required:
+        - id
+        - value
+        - row
+        - col
+        - isNew
+    EngineEvent:
+      oneOf:
+        - type: object
+          required: [type, id, from, to]
+          properties:
+            type:
+              type: string
+              enum: [TileMoved]
+            id:
+              type: string
+            from:
+              $ref: '#/components/schemas/Coordinates'
+            to:
+              $ref: '#/components/schemas/Coordinates'
+        - type: object
+          required: [type, targetId, consumedIds, value, scoreDelta]
+          properties:
+            type:
+              type: string
+              enum: [TileMerged]
+            targetId:
+              type: string
+            consumedIds:
+              type: array
+              items:
+                type: string
+              minItems: 2
+            value:
+              type: integer
+            scoreDelta:
+              type: integer
+        - type: object
+          required: [type, id, value, position]
+          properties:
+            type:
+              type: string
+              enum: [TileSpawned]
+            id:
+              type: string
+            value:
+              type: integer
+            position:
+              $ref: '#/components/schemas/Coordinates'
+        - type: object
+          required: [type, reason]
+          properties:
+            type:
+              type: string
+              enum: [MoveRejected]
+            reason:
+              type: string
+        - type: object
+          required: [type, boardHash]
+          properties:
+            type:
+              type: string
+              enum: [GameOver]
+            boardHash:
+              type: string
+    Coordinates:
+      type: object
+      properties:
+        row:
+          type: integer
+          minimum: 0
+          maximum: 3
+        col:
+          type: integer
+          minimum: 0
+          maximum: 3
+      required:
+        - row
+        - col
+    TelemetryPayload:
+      type: object
+      properties:
+        moveId:
+          type: string
+        direction:
+          type: string
+          enum: [up, down, left, right]
+        scoreDelta:
+          type: integer
+        boardHash:
+          type: string
+        latencyMs:
+          type: number
+          format: float
+        seed:
+          type: string
+        seedCursor:
+          type: integer
+        platform:
+          type: object
+          properties:
+            userAgent:
+              type: string
+            inputMode:
+              type: string
+              enum: [keyboard, touch, assistive]
+          required:
+            - userAgent
+            - inputMode
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - moveId
+        - direction
+        - scoreDelta
+        - boardHash
+        - latencyMs
+        - seed
+        - seedCursor
+        - platform
+        - timestamp

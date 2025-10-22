@@ -8,6 +8,7 @@ const TELEMETRY_ENDPOINT = '/api/telemetry';
 export function useTelemetryQueue(): void {
   const consumeTelemetry = useSessionStore((state) => state.consumeTelemetry);
   const pendingTelemetry = useSessionStore((state) => state.pendingTelemetry);
+  const registerTelemetry = useSessionStore((state) => state.registerTelemetry);
   const queueRef = useRef<BeaconQueue | null>(null);
 
   useEffect(() => {
@@ -24,15 +25,20 @@ export function useTelemetryQueue(): void {
       return;
     }
     const payloads = consumeTelemetry();
+    registerTelemetry(payloads);
     let containsGameOver = false;
+    let containsMobileMove = false;
     payloads.forEach((payload) => {
       if (payload.event === 'game.over') {
         containsGameOver = true;
       }
+      if (payload.deviceCategory === 'mobile' && payload.event === 'move.completed') {
+        containsMobileMove = true;
+      }
       queueRef.current?.enqueue(payload);
     });
-    if (containsGameOver) {
+    if (containsGameOver || containsMobileMove) {
       void queueRef.current.flush();
     }
-  }, [consumeTelemetry, pendingTelemetry]);
+  }, [consumeTelemetry, pendingTelemetry, registerTelemetry]);
 }

@@ -1,5 +1,8 @@
 export type Direction = 'up' | 'down' | 'left' | 'right';
-export type InputSource = 'keyboard' | 'touch' | 'assistive';
+export type InputSource = 'keyboard' | 'touch' | 'assistive' | 'tap';
+export type DeviceCategory = 'mobile' | 'desktop';
+export type GestureType = 'swipe' | 'tap';
+export type Orientation = 'portrait' | 'landscape';
 export type EngineStatus = 'idle' | 'animating' | 'gameOver';
 
 export interface Tile {
@@ -66,6 +69,10 @@ export interface SessionSnapshot {
   state: GameState;
   timestamp: number;
   rngCursor: number;
+  pendingCommands?: MoveCommand[];
+  gestureQueue?: MoveCommand[];
+  lastVisibleAt?: number;
+  orientation?: Orientation;
 }
 
 export interface TelemetryPlatform {
@@ -85,6 +92,10 @@ export interface TelemetryPayload {
   platform: TelemetryPlatform;
   timestamp: string;
   event: 'move.completed' | 'move.rejected' | 'game.over';
+  deviceCategory?: DeviceCategory;
+  gestureType?: GestureType;
+  orientation?: Orientation;
+  resumeAt?: number;
 }
 
 export interface ApplyMoveContext {

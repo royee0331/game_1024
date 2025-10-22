@@ -1,4 +1,4 @@
-import type { GameState, SessionSnapshot } from '@core/types';
+import type { GameState, MoveCommand, Orientation, SessionSnapshot } from '@core/types';
 
 const DEFAULT_SESSION_KEY = 'browser-1024/session';
 const DEFAULT_BEST_SCORE_KEY = 'browser-1024/best-score';
@@ -45,8 +45,23 @@ function getLocalStorage(): StorageAdapter {
 
 const storage = getLocalStorage();
 
+interface ResumeMetadata {
+  gestureQueue: MoveCommand[];
+  pendingCommands: MoveCommand[];
+  lastVisibleAt?: number;
+  orientation?: Orientation;
+}
+
+let lastResumeMetadata: ResumeMetadata | null = null;
+
 export function saveSessionSnapshot(snapshot: SessionSnapshot, key = DEFAULT_SESSION_KEY): void {
-  const payload = JSON.stringify(snapshot);
+  const payload = JSON.stringify({
+    ...snapshot,
+    pendingCommands: snapshot.pendingCommands ?? [],
+    gestureQueue: snapshot.gestureQueue ?? [],
+    lastVisibleAt: snapshot.lastVisibleAt,
+    orientation: snapshot.orientation
+  });
   storage.setItem(key, payload);
   storage.setItem(DEFAULT_BEST_SCORE_KEY, JSON.stringify(snapshot.state.bestScore));
 }
@@ -69,6 +84,7 @@ export function loadSessionSnapshot(key = DEFAULT_SESSION_KEY): SessionSnapshot 
 
 export function clearSession(key = DEFAULT_SESSION_KEY): void {
   storage.removeItem(key);
+  lastResumeMetadata = null;
 }
 
 export function loadBestScore(): number {
@@ -87,10 +103,17 @@ export function loadBestScore(): number {
 export function hydrateInitialState(baseState: GameState): GameState {
   const snapshot = loadSessionSnapshot();
   if (!snapshot) {
+    lastResumeMetadata = null;
     return baseState;
   }
 
   const bestScore = Math.max(baseState.bestScore, snapshot.state.bestScore ?? 0);
+  lastResumeMetadata = {
+    gestureQueue: snapshot.gestureQueue ?? [],
+    pendingCommands: snapshot.pendingCommands ?? [],
+    lastVisibleAt: snapshot.lastVisibleAt,
+    orientation: snapshot.orientation
+  };
   return {
     ...snapshot.state,
     seedCursor: snapshot.rngCursor ?? snapshot.state.seedCursor,
@@ -98,4 +121,8 @@ export function hydrateInitialState(baseState: GameState): GameState {
     status: 'idle',
     pendingMoves: []
   };
+}
+
+export function getLastResumeMetadata(): ResumeMetadata | null {
+  return lastResumeMetadata;
 }

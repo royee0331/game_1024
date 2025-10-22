@@ -1,0 +1,15 @@
+{
+  "component": "MobileControls",
+  "variants": [
+    {
+      "name": "portrait",
+      "viewport": { "width": 360, "height": 640 },
+      "storyId": "mobile-mobilecontrols--portrait"
+    },
+    {
+      "name": "landscape",
+      "viewport": { "width": 640, "height": 360 },
+      "storyId": "mobile-mobilecontrols--landscape"
+    }
+  ]
+}

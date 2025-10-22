@@ -74,6 +74,90 @@ const baseFixtures: Record<string, GameState> = {
     sessionId: 'session-fixture',
     lastMoveAt: undefined
   },
+  'fixture-mobile-opening-001': {
+    board: [
+      [null, null, null, null],
+      [null, null, null, null],
+      [null, null, null, null],
+      [
+        { id: 'mobile-open-a', value: 2, row: 3, col: 0, isNew: false },
+        { id: 'mobile-open-b', value: 2, row: 3, col: 1, isNew: false },
+        { id: 'mobile-open-c', value: 2, row: 3, col: 2, isNew: false },
+        { id: 'mobile-open-d', value: 2, row: 3, col: 3, isNew: false }
+      ]
+    ],
+    score: 0,
+    bestScore: 0,
+    moveCount: 0,
+    seed: 'seed-mobile-alpha-251022',
+    seedCursor: 0,
+    pendingMoves: [],
+    undoStack: [],
+    status: 'idle',
+    sessionId: 'session-mobile-open',
+    lastMoveAt: undefined
+  },
+  'fixture-mobile-midgame-002': {
+    board: [
+      [null, null, null, null],
+      [
+        { id: 'mobile-mid-a', value: 4, row: 1, col: 0, isNew: false },
+        null,
+        null,
+        { id: 'mobile-mid-b', value: 4, row: 1, col: 3, isNew: false }
+      ],
+      [
+        { id: 'mobile-mid-c', value: 2, row: 2, col: 0, isNew: false },
+        null,
+        { id: 'mobile-mid-d', value: 2, row: 2, col: 2, isNew: false },
+        null
+      ],
+      [
+        null,
+        { id: 'mobile-mid-e', value: 4, row: 3, col: 1, isNew: false },
+        null,
+        { id: 'mobile-mid-f', value: 2, row: 3, col: 3, isNew: false }
+      ]
+    ],
+    score: 64,
+    bestScore: 128,
+    moveCount: 10,
+    seed: 'seed-mobile-beta-251022',
+    seedCursor: 0,
+    pendingMoves: [],
+    undoStack: [],
+    status: 'idle',
+    sessionId: 'session-mobile-mid',
+    lastMoveAt: undefined
+  },
+  'fixture-mobile-resume-003': {
+    board: [
+      [
+        { id: 'mobile-resume-a', value: 4, row: 0, col: 0, isNew: false },
+        { id: 'mobile-resume-b', value: 2, row: 0, col: 1, isNew: false },
+        null,
+        null
+      ],
+      [null, null, { id: 'mobile-resume-c', value: 4, row: 1, col: 2, isNew: false }, null],
+      [null, null, null, null],
+      [
+        { id: 'mobile-resume-d', value: 2, row: 3, col: 0, isNew: false },
+        null,
+        null,
+        { id: 'mobile-resume-e', value: 2, row: 3, col: 3, isNew: false }
+      ]
+    ],
+    score: 48,
+    bestScore: 128,
+    moveCount: 8,
+    seed: 'seed-mobile-gamma-251022',
+    seedCursor: 0,
+    pendingMoves: [],
+    undoStack: [],
+    status: 'idle',
+    sessionId: 'session-mobile-resume',
+    lastMoveAt: undefined
+  },
   'fixture-endgame-003': {
     board: [
       [

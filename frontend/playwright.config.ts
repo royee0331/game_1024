@@ -12,6 +12,14 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] }
+    },
+    {
+      name: 'mobile',
+      use: {
+        ...devices['Pixel 5'],
+        viewport: { width: 360, height: 640 },
+        screen: { width: 360, height: 640 }
+      }
     }
   ]
 });

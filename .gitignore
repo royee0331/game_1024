@@ -6,6 +6,8 @@ build/
 .storybook/
 storybook-static/
 coverage/
+.playwright-report/
+frontend/test-results/
 *.log
 *.lock
 .env*

@@ -30,14 +30,28 @@ body {
   margin-bottom: 24px;
 }
 
-.game-scene__scores {
+.hud {
   display: flex;
   gap: 12px;
 }
 
-.game-scene__score {
+.hud__metric {
   background-color: rgba(255, 255, 255, 0.08);
   padding: 8px 12px;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  min-width: 92px;
+}
+
+.hud__label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+}
+
+.hud__value {
+  font-size: 20px;
   font-weight: 600;
 }

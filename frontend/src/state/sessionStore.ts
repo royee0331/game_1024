@@ -68,15 +68,26 @@ function settleBoard(board: GameState['board']): GameState['board'] {
   return board.map((row) => row.map((cell) => (cell ? { ...cell, isNew: false } : null)));
 }
 
+function sanitizeStateForStorage(state: GameState): GameState {
+  return {
+    ...state,
+    pendingMoves: [],
+    undoStack: state.undoStack.map((snapshot) => ({
+      ...snapshot,
+      state: {
+        ...snapshot.state,
+        pendingMoves: [],
+        undoStack: []
+      }
+    }))
+  };
+}
+
 function persistState(state: GameState): void {
   if (typeof window === 'undefined') {
     return;
   }
-  const sanitized: GameState = {
-    ...state,
-    pendingMoves: [],
-    undoStack: []
-  };
+  const sanitized = sanitizeStateForStorage(state);
   saveSessionSnapshot({
     state: sanitized,
     timestamp: Date.now(),

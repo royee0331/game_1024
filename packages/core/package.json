@@ -11,6 +11,7 @@
     },
     "./types": "./src/types.ts",
     "./engine/applyMove": "./src/engine/applyMove.ts",
+    "./random": "./src/random/index.ts",
     "./random/prng": "./src/random/prng.ts"
   },
   "scripts": {

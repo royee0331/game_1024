@@ -5,6 +5,8 @@ Auto-generated from all feature plans. Last updated: 2025-10-22
 ## Active Technologies
 - TypeScript 5.4 across the pnpm workspace + React 18 UI, Zustand state store, `@browser-1024/core` engine, `@browser-1024/ui-telemetry`, Framer Motion animations (002-support-mobile-play)
 - Local storage session snapshots via `@browser-1024/shared/storage/localSession` (002-support-mobile-play)
+- TypeScript 5.4 with React 18 function components + Zustand session store (`frontend/src/state/sessionStore.ts`), shared score formatter `@shared/formatters/boardHash`, existing telemetry queue hook, Vite styling pipeline (003-mobile-score-ui)
+- Local session snapshot via `@shared/storage/localSession` for best score persistence and resume metadata (003-mobile-score-ui)
 
 - (001-speckit-plan)
 
@@ -35,10 +37,10 @@ tests/
 - Keep shared utilities framework-agnostic inside `packages/shared`.
 
 ## Recent Changes
+- 003-mobile-score-ui: Added TypeScript 5.4 with React 18 function components + Zustand session store (`frontend/src/state/sessionStore.ts`), shared score formatter `@shared/formatters/boardHash`, existing telemetry queue hook, Vite styling pipeline
 - 002-support-mobile-play: Added TypeScript 5.4 across the pnpm workspace + React 18 UI, Zustand state store, `@browser-1024/core` engine, `@browser-1024/ui-telemetry`, Framer Motion animations
 
 - 001-speckit-plan: Added
-- 2025-10-22: Refreshed README.md and this guideline with current contributor workflows.
 
 <!-- MANUAL ADDITIONS START -->
 ### Maintainer Notes

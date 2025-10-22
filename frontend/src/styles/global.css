@@ -55,3 +55,48 @@ body {
   font-size: 20px;
   font-weight: 600;
 }
+
+.game-announcements {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.06);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.game-scene__actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.restart-button {
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #ff6f61, #ff9a44);
+  color: #121212;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.restart-button:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.restart-button:disabled,
+.restart-button[aria-disabled='true'] {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.5);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.restart-button:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(255, 159, 68, 0.35);
+}

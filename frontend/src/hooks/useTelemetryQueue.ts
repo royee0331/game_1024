@@ -24,8 +24,15 @@ export function useTelemetryQueue(): void {
       return;
     }
     const payloads = consumeTelemetry();
+    let containsGameOver = false;
     payloads.forEach((payload) => {
+      if (payload.event === 'game.over') {
+        containsGameOver = true;
+      }
       queueRef.current?.enqueue(payload);
     });
+    if (containsGameOver) {
+      void queueRef.current.flush();
+    }
   }, [consumeTelemetry, pendingTelemetry]);
 }

@@ -7,9 +7,11 @@ import type {
   EngineEvent,
   GameState,
   MoveCommand,
-  Tile
+  Tile,
+  TelemetryPayload
 } from '../types';
 import type { SeededPrng } from '../random/prng';
+import { detectGameOver } from './detectGameOver';
 
 interface Position {
   row: number;
@@ -50,34 +52,6 @@ function getLines(size: number, direction: Direction): Position[][] {
   return lines;
 }
 
-function hasAvailableMoves(board: BoardMatrix): boolean {
-  const size = board.length;
-  for (let row = 0; row < size; row += 1) {
-    for (let col = 0; col < size; col += 1) {
-      const tile = board[row][col];
-      if (!tile) {
-        return true;
-      }
-      const neighbors: Position[] = [
-        { row: row - 1, col },
-        { row: row + 1, col },
-        { row, col: col - 1 },
-        { row, col: col + 1 }
-      ];
-      for (const neighbor of neighbors) {
-        if (neighbor.row < 0 || neighbor.row >= size || neighbor.col < 0 || neighbor.col >= size) {
-          continue;
-        }
-        const neighborTile = board[neighbor.row][neighbor.col];
-        if (neighborTile && neighborTile.value === tile.value) {
-          return true;
-        }
-      }
-    }
-  }
-  return false;
-}
-
 function createMoveId(state: GameState, prng: SeededPrng): string {
   return `${state.seed}-${state.moveCount + 1}-${prng.cursor}`;
 }
@@ -114,6 +88,53 @@ function buildRejectionResult(
 
   return {
     nextState: { ...state },
+    events,
+    telemetry
+  };
+}
+
+function buildGameOverResult(
+  state: GameState,
+  command: MoveCommand,
+  context: ApplyMoveContext
+): ApplyMoveResult {
+  const timestamp = context.now ?? Date.now();
+  const telemetrySessionId = context.sessionId ?? state.sessionId ?? 'unknown-session';
+  const boardHash = formatBoardHash(state.board);
+  const latencyMs = Math.max(0, timestamp - command.requestedAt);
+
+  const events: EngineEvent[] = [
+    {
+      type: 'GameOver',
+      boardHash
+    }
+  ];
+
+  const telemetry: TelemetryPayload[] = [
+    {
+      sessionId: telemetrySessionId,
+      moveId: `${state.seed}-${state.moveCount}-game-over`,
+      direction: command.direction,
+      scoreDelta: 0,
+      boardHash,
+      latencyMs,
+      seed: state.seed,
+      seedCursor: state.seedCursor,
+      platform: context.platform,
+      timestamp: new Date(timestamp).toISOString(),
+      event: 'game.over'
+    }
+  ];
+
+  const nextState: GameState = {
+    ...state,
+    status: 'gameOver',
+    pendingMoves: [],
+    lastMoveAt: timestamp
+  };
+
+  return {
+    nextState,
     events,
     telemetry
   };
@@ -214,6 +235,9 @@ export function applyMove(
   }
 
   if (!moved && scoreDelta === 0) {
+    if (detectGameOver(state.board)) {
+      return buildGameOverResult(state, command, context);
+    }
     return buildRejectionResult(state, command, context);
   }
 
@@ -273,7 +297,7 @@ export function applyMove(
 
   const boardHash = formatBoardHash(nextBoard);
   const telemetrySessionId = context.sessionId ?? state.sessionId ?? 'unknown-session';
-  const telemetry = [
+  const telemetry: TelemetryPayload[] = [
     {
       sessionId: telemetrySessionId,
       moveId: createMoveId(state, prng),
@@ -289,12 +313,24 @@ export function applyMove(
     }
   ];
 
-  const hasMovesRemaining = hasAvailableMoves(nextBoard);
-  if (!hasMovesRemaining) {
+  if (detectGameOver(nextBoard)) {
     nextState.status = 'gameOver';
     events.push({
       type: 'GameOver',
       boardHash
+    });
+    telemetry.push({
+      sessionId: telemetrySessionId,
+      moveId: `${state.seed}-${nextState.moveCount}-game-over`,
+      direction: command.direction,
+      scoreDelta: 0,
+      boardHash,
+      latencyMs: Math.max(0, timestamp - command.requestedAt),
+      seed: state.seed,
+      seedCursor: prng.cursor,
+      platform: context.platform,
+      timestamp: new Date(timestamp).toISOString(),
+      event: 'game.over'
     });
   }
 

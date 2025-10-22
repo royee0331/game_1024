@@ -84,7 +84,7 @@ export interface TelemetryPayload {
   seedCursor: number;
   platform: TelemetryPlatform;
   timestamp: string;
-  event: 'move.completed' | 'move.rejected';
+  event: 'move.completed' | 'move.rejected' | 'game.over';
 }
 
 export interface ApplyMoveContext {

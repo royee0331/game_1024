@@ -94,15 +94,15 @@
 
 ### Tests for User Story 3
 
-- [ ] T026 [P] [US3] Create axe-core accessibility spec in `frontend/tests/accessibility/game-over.a11y.spec.ts` covering live region output.
-- [ ] T027 [P] [US3] Author Playwright scenario `frontend/tests/interaction/game-over-restart.spec.ts` validating focus and restart flow.
+- [x] T026 [P] [US3] Create axe-core accessibility spec in `frontend/tests/accessibility/game-over.a11y.spec.ts` covering live region output.
+- [x] T027 [P] [US3] Author Playwright scenario `frontend/tests/interaction/game-over-restart.spec.ts` validating focus and restart flow.
 
 ### Implementation for User Story 3
 
-- [ ] T028 [US3] Add game-over detection helper in `packages/core/src/engine/detectGameOver.ts` and emit `GameOver` event when no moves remain.
-- [ ] T029 [US3] Introduce `GameAnnouncements` live region in `frontend/src/components/GameAnnouncements.tsx` announcing localized status strings.
-- [ ] T030 [US3] Implement accessible restart control in `frontend/src/components/RestartButton.tsx` handling Enter/Space activation and focus management.
-- [ ] T031 [US3] Enrich telemetry queue in `frontend/src/hooks/useTelemetryQueue.ts` to include `GameOver` payload with board hash and latency.
+- [x] T028 [US3] Add game-over detection helper in `packages/core/src/engine/detectGameOver.ts` and emit `GameOver` event when no moves remain.
+- [x] T029 [US3] Introduce `GameAnnouncements` live region in `frontend/src/components/GameAnnouncements.tsx` announcing localized status strings.
+- [x] T030 [US3] Implement accessible restart control in `frontend/src/components/RestartButton.tsx` handling Enter/Space activation and focus management.
+- [x] T031 [US3] Enrich telemetry queue in `frontend/src/hooks/useTelemetryQueue.ts` to include `GameOver` payload with board hash and latency.
 
 **Checkpoint**: All user stories satisfy acceptance criteria and can be demonstrated independently.
 
@@ -112,9 +112,9 @@
 
 **Purpose**: Hardening, performance, and documentation after core stories complete.
 
-- [ ] T032 Profile animation timing and expose metrics hook in `frontend/src/hooks/usePerformanceMetrics.ts` to ensure <80ms latency.
-- [ ] T033 [P] Document telemetry schema and sendBeacon fallback behavior in `packages/ui-telemetry/README.md`.
-- [ ] T034 Run end-to-end validation from `specs/001-browser-1024-game/quickstart.md` ensuring fixtures launch and telemetry mock receives batches.
+- [x] T032 Profile animation timing and expose metrics hook in `frontend/src/hooks/usePerformanceMetrics.ts` to ensure <80ms latency.
+- [x] T033 [P] Document telemetry schema and sendBeacon fallback behavior in `packages/ui-telemetry/README.md`.
+- [x] T034 Run end-to-end validation from `specs/001-browser-1024-game/quickstart.md` ensuring fixtures launch and telemetry mock receives batches.
 
 ---
 

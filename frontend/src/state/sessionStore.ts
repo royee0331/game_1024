@@ -14,7 +14,8 @@ import type {
 import {
   hydrateInitialState,
   saveSessionSnapshot,
-  loadBestScore
+  loadBestScore,
+  clearSession
 } from '@shared/storage/localSession';
 import { resolveFixture } from '../fixtures';
 
@@ -28,10 +29,14 @@ interface SessionStoreState {
   completeAnimation(): void;
   consumeTelemetry(): TelemetryPayload[];
   hydrate(game: GameState): void;
+  restart(): void;
 }
 
 const BOARD_SIZE = 4;
 const DEFAULT_SEED = 'seed-alpha-221022';
+
+let initialSeed = DEFAULT_SEED;
+let initialFixture: string | null = null;
 
 function generateSessionId(): string {
   if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
@@ -95,6 +100,31 @@ function persistState(state: GameState): void {
   });
 }
 
+function createSeededOpeningState(bestScore: number): GameState {
+  const sessionId = generateSessionId();
+  const fixture = resolveFixture(initialFixture);
+  const canReuseFixture =
+    fixture !== null && fixture.score === 0 && fixture.moveCount === 0 && fixture.seed === initialSeed;
+
+  const baseState = canReuseFixture ? { ...fixture, board: settleBoard(fixture.board) } : createBaseState(initialSeed, sessionId);
+
+  const board = settleBoard(baseState.board);
+  return {
+    ...baseState,
+    board,
+    score: 0,
+    bestScore: Math.max(bestScore, baseState.bestScore ?? 0),
+    moveCount: 0,
+    seed: initialSeed,
+    seedCursor: 0,
+    pendingMoves: [],
+    undoStack: [],
+    status: 'idle',
+    sessionId,
+    lastMoveAt: undefined
+  };
+}
+
 function resolveMoveResult(game: GameState, command: MoveCommand) {
   const prng = createSeededPrng(game.seed, game.seedCursor);
   const sessionId = game.sessionId ?? generateSessionId();
@@ -117,10 +147,12 @@ function bootstrapGameState(): GameState {
   const params = isBrowser ? new URLSearchParams(window.location.search) : null;
   const requestedSeed = (params?.get('seed') ?? DEFAULT_SEED).trim();
   const fixtureName = params?.get('fixture');
+  initialSeed = requestedSeed || DEFAULT_SEED;
+  initialFixture = fixtureName;
   const sessionId = generateSessionId();
 
-  let baseState = resolveFixture(fixtureName) ?? createBaseState(requestedSeed, sessionId);
-  baseState.seed = requestedSeed;
+  let baseState = resolveFixture(fixtureName) ?? createBaseState(initialSeed, sessionId);
+  baseState.seed = initialSeed;
   baseState.sessionId = baseState.sessionId ?? sessionId;
 
   if (!isBrowser) {
@@ -145,10 +177,13 @@ export const useSessionStore = create<SessionStoreState>((set, get) => ({
   isAnimating: false,
   enqueueMove(direction, source) {
     const state = get();
+    if (state.game.status === 'gameOver') {
+      return;
+    }
     const command: MoveCommand = {
       direction,
       source,
-      requestedAt: typeof performance !== 'undefined' ? performance.now() : Date.now()
+      requestedAt: Date.now()
     };
 
     if (state.isAnimating || state.pendingCommands.length > 0) {
@@ -168,24 +203,26 @@ export const useSessionStore = create<SessionStoreState>((set, get) => ({
       events: result.events,
       pendingTelemetry: [...state.pendingTelemetry, ...result.telemetry],
       pendingCommands: [],
-      isAnimating: true
+      isAnimating: result.nextState.status === 'animating'
     });
   },
   completeAnimation() {
     const state = get();
     const [nextCommand, ...rest] = state.pendingCommands;
     const settledBoard = settleBoard(state.game.board);
+    const targetStatus = state.game.status === 'gameOver' ? 'gameOver' : 'idle';
     const baseGame: GameState = {
       ...state.game,
       board: settledBoard,
-      status: 'idle',
-      pendingMoves: rest
+      status: targetStatus,
+      pendingMoves: targetStatus === 'gameOver' ? [] : rest
     };
 
-    if (!nextCommand) {
+    if (!nextCommand || targetStatus === 'gameOver') {
       set({
         game: baseGame,
         events: [],
+        pendingCommands: targetStatus === 'gameOver' ? [] : rest,
         isAnimating: false
       });
       return;
@@ -197,13 +234,26 @@ export const useSessionStore = create<SessionStoreState>((set, get) => ({
       events: result.events,
       pendingTelemetry: [...state.pendingTelemetry, ...result.telemetry],
       pendingCommands: rest,
-      isAnimating: true
+      isAnimating: result.nextState.status === 'animating'
     });
   },
   consumeTelemetry() {
     const payloads = get().pendingTelemetry;
     set({ pendingTelemetry: [] });
     return payloads;
+  },
+  restart() {
+    const state = get();
+    const nextState = createSeededOpeningState(state.game.bestScore);
+    clearSession();
+    persistState(nextState);
+    set({
+      game: nextState,
+      events: [],
+      pendingTelemetry: [],
+      pendingCommands: [],
+      isAnimating: false
+    });
   },
   hydrate(game) {
     set({

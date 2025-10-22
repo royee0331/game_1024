@@ -54,6 +54,7 @@ export interface SessionStoreState {
   resumeAt: number | null;
   noMovePromptAt: number | null;
   lastVisibleAt: number | null;
+  gameOverAcknowledged: boolean;
   enqueueMove(direction: Direction, source: InputSource, metadata?: GestureMetadata): void;
   completeAnimation(): void;
   consumeTelemetry(): TelemetryPayload[];
@@ -64,7 +65,9 @@ export interface SessionStoreState {
   setNoMovePrompt(timestamp: number | null): void;
   setLastVisible(timestamp: number | null): void;
   registerTelemetry(payloads: TelemetryPayload[]): void;
+  enqueueTelemetry(payload: TelemetryPayload): void;
   persistSnapshot(): void;
+  setGameOverAcknowledged(acknowledged: boolean): void;
 }
 
 const BOARD_SIZE = 4;
@@ -226,7 +229,7 @@ function bootstrapGameState(): GameState {
   initialFixture = fixtureName;
   const sessionId = generateSessionId();
 
-  let baseState = resolveFixture(fixtureName) ?? createBaseState(initialSeed, sessionId);
+  const baseState = resolveFixture(fixtureName) ?? createBaseState(initialSeed, sessionId);
   baseState.seed = initialSeed;
   baseState.sessionId = baseState.sessionId ?? sessionId;
 
@@ -258,6 +261,7 @@ export const useSessionStore = create<SessionStoreState>((set, get) => ({
   resumeAt: null,
   noMovePromptAt: null,
   lastVisibleAt: initialLastVisibleAt,
+  gameOverAcknowledged: false,
   enqueueMove(direction, source, metadata) {
     const state = get();
     if (state.game.status === 'gameOver') {
@@ -391,7 +395,8 @@ export const useSessionStore = create<SessionStoreState>((set, get) => ({
       resumeAt: null,
       noMovePromptAt: null,
       lastVisibleAt: null,
-      orientation
+      orientation,
+      gameOverAcknowledged: false
     });
   },
   hydrate(game) {
@@ -437,6 +442,9 @@ export const useSessionStore = create<SessionStoreState>((set, get) => ({
       }
     });
   },
+  enqueueTelemetry(payload) {
+    set((state) => ({ pendingTelemetry: [...state.pendingTelemetry, payload] }));
+  },
   persistSnapshot() {
     const snapshotState = get();
     persistState(snapshotState.game, {
@@ -444,5 +452,8 @@ export const useSessionStore = create<SessionStoreState>((set, get) => ({
       orientation: snapshotState.orientation,
       lastVisibleAt: snapshotState.lastVisibleAt
     });
+  },
+  setGameOverAcknowledged(acknowledged) {
+    set({ gameOverAcknowledged: acknowledged });
   }
 }));

@@ -3,10 +3,15 @@ import { formatScore } from '@shared/formatters/boardHash';
 import { useSessionStore } from '../state/sessionStore';
 
 const START_MESSAGE = '使用方向键或滑动来合并数字';
-const GAME_OVER_MESSAGE = '无可用移动，按回车重新开始';
+const GAME_OVER_ACTIVE_MESSAGE = '挑战完成提示已打开，请使用弹窗按钮继续。';
+const GAME_OVER_ACK_MESSAGE = '挑战完成，可随时重新开始。';
 const NO_MOVE_MESSAGE = '滑动距离太短，请继续尝试';
 
-export const GameAnnouncements: React.FC = () => {
+export interface GameAnnouncementsProps {
+  suppressGameOverMessage?: boolean;
+}
+
+export const GameAnnouncements: React.FC<GameAnnouncementsProps> = ({ suppressGameOverMessage = false }) => {
   const status = useSessionStore((state) => state.game.status);
   const score = useSessionStore((state) => state.game.score);
   const moveCount = useSessionStore((state) => state.game.moveCount);
@@ -16,6 +21,7 @@ export const GameAnnouncements: React.FC = () => {
   const resumeAt = useSessionStore((state) => state.resumeAt);
   const lastVisibleAt = useSessionStore((state) => state.lastVisibleAt);
   const clearResume = useSessionStore((state) => state.setResumeAt);
+  const gameOverAcknowledged = useSessionStore((state) => state.gameOverAcknowledged);
   const [message, setMessage] = useState<string>(START_MESSAGE);
   const timeoutRef = useRef<number | null>(null);
 
@@ -26,7 +32,11 @@ export const GameAnnouncements: React.FC = () => {
     }
 
     if (status === 'gameOver') {
-      setMessage(GAME_OVER_MESSAGE);
+      if (suppressGameOverMessage) {
+        setMessage(GAME_OVER_ACTIVE_MESSAGE);
+        return;
+      }
+      setMessage(gameOverAcknowledged ? GAME_OVER_ACK_MESSAGE : GAME_OVER_ACTIVE_MESSAGE);
       return;
     }
 
@@ -66,7 +76,19 @@ export const GameAnnouncements: React.FC = () => {
     }
 
     setMessage(START_MESSAGE);
-  }, [status, moveCount, score, lastGesture, noMovePromptAt, clearNoMovePrompt, resumeAt, lastVisibleAt, clearResume]);
+  }, [
+    status,
+    moveCount,
+    score,
+    lastGesture,
+    noMovePromptAt,
+    clearNoMovePrompt,
+    resumeAt,
+    lastVisibleAt,
+    clearResume,
+    suppressGameOverMessage,
+    gameOverAcknowledged
+  ]);
 
   return (
     <div

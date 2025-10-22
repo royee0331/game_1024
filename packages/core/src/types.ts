@@ -80,7 +80,7 @@ export interface TelemetryPlatform {
   inputMode: InputSource;
 }
 
-export interface TelemetryPayload {
+interface BaseMoveTelemetry {
   sessionId: string;
   moveId: string;
   direction: Direction;
@@ -91,12 +91,26 @@ export interface TelemetryPayload {
   seedCursor: number;
   platform: TelemetryPlatform;
   timestamp: string;
-  event: 'move.completed' | 'move.rejected' | 'game.over';
   deviceCategory?: DeviceCategory;
   gestureType?: GestureType;
   orientation?: Orientation;
   resumeAt?: number;
 }
+
+export interface SessionRestartTelemetryPayload {
+  event: 'session.restart';
+  sessionId: string;
+  timestamp: string;
+  triggeredBy: 'gameover-modal' | 'restart-button';
+  bestScore: number;
+  locale: string;
+}
+
+export type TelemetryPayload =
+  | (BaseMoveTelemetry & { event: 'move.completed' })
+  | (BaseMoveTelemetry & { event: 'move.rejected' })
+  | (BaseMoveTelemetry & { event: 'game.over' })
+  | SessionRestartTelemetryPayload;
 
 export interface ApplyMoveContext {
   command: MoveCommand;

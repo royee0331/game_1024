@@ -5,13 +5,15 @@ import type {
   TelemetryPayload
 } from '@core/types';
 
-export interface MobileInteractionLog extends TelemetryPayload {
-  deviceCategory: DeviceCategory;
-  gestureType: GestureType;
-  orientation: Orientation;
-  latencyMs: number;
-  resumeAt?: number;
-}
+export type MobileInteractionLog = Extract<
+  TelemetryPayload,
+  {
+    deviceCategory: DeviceCategory;
+    gestureType: GestureType;
+    orientation: Orientation;
+    latencyMs: number;
+  }
+>;
 
 export function isMobileInteractionLog(
   payload: TelemetryPayload

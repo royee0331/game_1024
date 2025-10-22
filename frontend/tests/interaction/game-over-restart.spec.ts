@@ -17,14 +17,10 @@ test.describe('game over restart flow', () => {
 
     await page.keyboard.press('ArrowUp');
 
-    const restartButton = page.locator('[data-test="restart-button"]');
-    await expect(restartButton).toBeVisible();
-    await page.waitForFunction(() => document.activeElement?.getAttribute('data-test') === 'restart-button');
+    const modal = page.locator('[data-test="game-over-modal"]');
+    await expect(modal).toBeVisible();
 
-    const announcement = page.locator('[data-test="game-announcements"]');
-    await expect(announcement).toContainText('无可用移动，按回车重新开始');
-
-    await restartButton.press('Enter');
+    await page.keyboard.press('Enter');
 
     await page.waitForSelector('[data-test="tile-position-0-0"][data-test-value="2"]');
     await expect(page.locator('[data-test="tile-position-1-1"][data-test-value="2"]')).toBeVisible();
@@ -45,5 +41,6 @@ test.describe('game over restart flow', () => {
       .flatMap((envelope) => envelope?.events ?? []);
 
     expect(telemetryEvents.some((event) => event.event === 'game.over')).toBe(true);
+    expect(telemetryEvents.some((event) => event.event === 'session.restart')).toBe(true);
   });
 });

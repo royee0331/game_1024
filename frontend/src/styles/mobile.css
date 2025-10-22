@@ -1,3 +1,44 @@
+.game-scene {
+  padding-top: calc(24px + env(safe-area-inset-top));
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+}
+
+.game-scene__header[data-layout='stacked'] .hud__metric {
+  width: min(100%, 320px);
+  margin: 0 auto;
+}
+
+@media (max-width: 480px) {
+  .hud--stacked {
+    gap: 18px;
+  }
+
+  .hud__metric {
+    padding: 14px 18px;
+  }
+
+  .game-scene__title {
+    font-size: 2.125rem;
+  }
+}
+
+.game-modal__dialog {
+  margin: calc(env(safe-area-inset-top) / 2) auto calc(env(safe-area-inset-bottom) / 2);
+  padding-top: calc(24px + env(safe-area-inset-top) / 2);
+  padding-bottom: calc(24px + env(safe-area-inset-bottom) / 1.5);
+  width: min(94vw, 380px);
+}
+
+.game-modal__metrics {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 420px) {
+  .game-modal__metrics {
+    grid-template-columns: repeat(3, minmax(108px, 1fr));
+  }
+}
+
 .mobile-controls {
   position: fixed;
   left: 50%;

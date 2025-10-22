@@ -12,6 +12,22 @@ export interface LoadFixtureOptions {
   routePattern?: string;
 }
 
+export interface FixturePresetOptions {
+  viewport?: { width: number; height: number };
+  routePattern?: string;
+}
+
+export const VIEWPORT_PRESETS = {
+  compactPortrait: { width: 360, height: 640 },
+  compactLandscape: { width: 640, height: 360 }
+} as const;
+
+export const HUD_COMPACT_FIXTURE = 'fixture-mobile-hud-compact-001';
+export const HUD_COMPACT_SEED = 'seed-hud-compact-251022';
+
+export const GAMEOVER_FIXTURE = 'fixture-mobile-gameover-001';
+export const GAMEOVER_SEED = 'seed-gameover-251022';
+
 export async function setMobileViewport(
   page: Page,
   orientation: 'portrait' | 'landscape' = 'portrait'
@@ -60,10 +76,45 @@ export async function loadMobileFixture(
     await page.setViewportSize(viewport);
   }
 
+  await page.addInitScript(() => {
+    try {
+      window.localStorage?.clear?.();
+      window.sessionStorage?.clear?.();
+    } catch (error) {
+      console.warn('[testHarness] Failed to clear storage before loading fixture', error);
+    }
+  });
+
   const capture = await setupTelemetryCapture(page, routePattern);
   await page.goto(`/?fixture=${fixture}&seed=${seed}`);
   await page.waitForSelector('.tile-grid');
   return capture;
+}
+
+export async function loadHudCompactScenario(
+  page: Page,
+  overrides: FixturePresetOptions = {}
+): Promise<TelemetryCapture> {
+  const viewport = overrides.viewport ?? VIEWPORT_PRESETS.compactPortrait;
+  return loadMobileFixture(page, {
+    fixture: HUD_COMPACT_FIXTURE,
+    seed: HUD_COMPACT_SEED,
+    viewport,
+    routePattern: overrides.routePattern
+  });
+}
+
+export async function loadGameOverScenario(
+  page: Page,
+  overrides: FixturePresetOptions = {}
+): Promise<TelemetryCapture> {
+  const viewport = overrides.viewport ?? VIEWPORT_PRESETS.compactPortrait;
+  return loadMobileFixture(page, {
+    fixture: GAMEOVER_FIXTURE,
+    seed: GAMEOVER_SEED,
+    viewport,
+    routePattern: overrides.routePattern
+  });
 }
 
 export async function performSwipe(

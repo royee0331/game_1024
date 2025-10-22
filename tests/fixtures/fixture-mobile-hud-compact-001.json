@@ -1,0 +1,39 @@
+{
+  "state": {
+    "board": [
+      [
+        null,
+        { "id": "hud-compact-a", "value": 512, "row": 0, "col": 1, "isNew": false },
+        null,
+        { "id": "hud-compact-b", "value": 16, "row": 0, "col": 3, "isNew": false }
+      ],
+      [
+        { "id": "hud-compact-c", "value": 2, "row": 1, "col": 0, "isNew": false },
+        null,
+        { "id": "hud-compact-d", "value": 64, "row": 1, "col": 2, "isNew": false },
+        null
+      ],
+      [
+        { "id": "hud-compact-e", "value": 2, "row": 2, "col": 0, "isNew": false },
+        { "id": "hud-compact-f", "value": 8, "row": 2, "col": 1, "isNew": false },
+        null,
+        { "id": "hud-compact-g", "value": 4, "row": 2, "col": 3, "isNew": false }
+      ],
+      [
+        { "id": "hud-compact-h", "value": 8, "row": 3, "col": 0, "isNew": false },
+        null,
+        { "id": "hud-compact-i", "value": 2, "row": 3, "col": 2, "isNew": false },
+        null
+      ]
+    ],
+    "score": 0,
+    "bestScore": 2304,
+    "moveCount": 0,
+    "seed": "seed-hud-compact-251022",
+    "seedCursor": 0,
+    "pendingMoves": [],
+    "undoStack": [],
+    "status": "idle",
+    "sessionId": "session-mobile-hud-compact"
+  }
+}

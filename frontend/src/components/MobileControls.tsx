@@ -44,7 +44,7 @@ export const MobileControls: React.FC<MobileControlsProps> = ({ orientation, vis
       data-visible={visible ? 'true' : 'false'}
       data-test="mobile-controls"
     >
-      {ORDER.map((direction, index) => {
+      {ORDER.map((direction) => {
         const config = LABELS[direction];
         return (
           <button

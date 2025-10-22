@@ -1,0 +1,39 @@
+{
+  "state": {
+    "board": [
+      [
+        { "id": "go-a", "value": 32, "row": 0, "col": 0, "isNew": false },
+        { "id": "go-e", "value": 64, "row": 0, "col": 1, "isNew": false },
+        { "id": "go-i", "value": 128, "row": 0, "col": 2, "isNew": false },
+        { "id": "go-m", "value": 256, "row": 0, "col": 3, "isNew": false }
+      ],
+      [
+        { "id": "go-b", "value": 1024, "row": 1, "col": 0, "isNew": false },
+        { "id": "go-f", "value": 32, "row": 1, "col": 1, "isNew": false },
+        { "id": "go-j", "value": 64, "row": 1, "col": 2, "isNew": false },
+        { "id": "go-n", "value": 128, "row": 1, "col": 3, "isNew": false }
+      ],
+      [
+        { "id": "go-c", "value": 2048, "row": 2, "col": 0, "isNew": false },
+        { "id": "go-g", "value": 16, "row": 2, "col": 1, "isNew": false },
+        { "id": "go-k", "value": 32, "row": 2, "col": 2, "isNew": false },
+        { "id": "go-o", "value": 64, "row": 2, "col": 3, "isNew": false }
+      ],
+      [
+        { "id": "go-d", "value": 2048, "row": 3, "col": 0, "isNew": false },
+        { "id": "go-h", "value": 8, "row": 3, "col": 1, "isNew": false },
+        { "id": "go-l", "value": 16, "row": 3, "col": 2, "isNew": false },
+        { "id": "go-p", "value": 32, "row": 3, "col": 3, "isNew": false }
+      ]
+    ],
+    "score": 0,
+    "bestScore": 4096,
+    "moveCount": 75,
+    "seed": "seed-gameover-251022",
+    "seedCursor": 0,
+    "pendingMoves": [],
+    "undoStack": [],
+    "status": "idle",
+    "sessionId": "session-mobile-gameover"
+  }
+}

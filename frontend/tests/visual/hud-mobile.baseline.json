@@ -1,0 +1,15 @@
+{
+  "component": "Hud",
+  "variants": [
+    {
+      "name": "stacked-mobile",
+      "viewport": { "width": 360, "height": 640 },
+      "storyId": "hud--stacked-mobile"
+    },
+    {
+      "name": "wide-desktop",
+      "viewport": { "width": 1024, "height": 768 },
+      "storyId": "hud--wide-desktop"
+    }
+  ]
+}

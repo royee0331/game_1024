@@ -28,6 +28,7 @@ export function useTelemetryQueue(): void {
     registerTelemetry(payloads);
     let containsGameOver = false;
     let containsMobileMove = false;
+    let containsRestart = false;
     payloads.forEach((payload) => {
       if (payload.event === 'game.over') {
         containsGameOver = true;
@@ -35,9 +36,12 @@ export function useTelemetryQueue(): void {
       if (payload.deviceCategory === 'mobile' && payload.event === 'move.completed') {
         containsMobileMove = true;
       }
+      if (payload.event === 'session.restart') {
+        containsRestart = true;
+      }
       queueRef.current?.enqueue(payload);
     });
-    if (containsGameOver || containsMobileMove) {
+    if (containsGameOver || containsMobileMove || containsRestart) {
       void queueRef.current.flush();
     }
   }, [consumeTelemetry, pendingTelemetry, registerTelemetry]);

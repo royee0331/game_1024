@@ -66,6 +66,20 @@ local development and Storybook sessions.
 - **`@browser-1024/ui-telemetry`** batches move telemetry and ships it via the
   browser beacon API, keeping the UI responsive on slower devices.
 
+## Mobile HUD & completion modal
+
+- The HUD now adapts between wide and stacked layouts, centering score,
+  best score, and move count with ≥16px spacing on viewports ≤480px. The
+  component is showcased in Storybook under **HUD → Stacked Mobile / Wide
+  Desktop** for quick visual QA.
+- A dedicated game-over modal surfaces final metrics, localized actions, and a
+  manual focus trap. It emits a `session.restart` telemetry envelope before
+  seeding the next session so analytics dashboards can distinguish restarts
+  initiated from the modal vs. the persistent restart button.
+- Playwright specs in `frontend/tests/interaction/mobile/` cover stacked HUD
+  layout, modal timing, and restart flows to prevent regressions across mobile
+  browsers.
+
 ## Additional resources
 
 Specification documents under `specs/` provide historical context and acceptance

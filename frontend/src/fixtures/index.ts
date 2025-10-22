@@ -158,6 +158,82 @@ const baseFixtures: Record<string, GameState> = {
     sessionId: 'session-mobile-resume',
     lastMoveAt: undefined
   },
+  'fixture-mobile-hud-compact-001': {
+    board: [
+      [
+        null,
+        { id: 'hud-compact-a', value: 512, row: 0, col: 1, isNew: false },
+        null,
+        { id: 'hud-compact-b', value: 16, row: 0, col: 3, isNew: false }
+      ],
+      [
+        { id: 'hud-compact-c', value: 2, row: 1, col: 0, isNew: false },
+        null,
+        { id: 'hud-compact-d', value: 64, row: 1, col: 2, isNew: false },
+        null
+      ],
+      [
+        { id: 'hud-compact-e', value: 2, row: 2, col: 0, isNew: false },
+        { id: 'hud-compact-f', value: 8, row: 2, col: 1, isNew: false },
+        null,
+        { id: 'hud-compact-g', value: 4, row: 2, col: 3, isNew: false }
+      ],
+      [
+        { id: 'hud-compact-h', value: 8, row: 3, col: 0, isNew: false },
+        null,
+        { id: 'hud-compact-i', value: 2, row: 3, col: 2, isNew: false },
+        null
+      ]
+    ],
+    score: 0,
+    bestScore: 2304,
+    moveCount: 0,
+    seed: 'seed-hud-compact-251022',
+    seedCursor: 0,
+    pendingMoves: [],
+    undoStack: [],
+    status: 'idle',
+    sessionId: 'session-mobile-hud-compact',
+    lastMoveAt: undefined
+  },
+  'fixture-mobile-gameover-001': {
+    board: [
+      [
+        { id: 'go-a', value: 32, row: 0, col: 0, isNew: false },
+        { id: 'go-e', value: 64, row: 0, col: 1, isNew: false },
+        { id: 'go-i', value: 128, row: 0, col: 2, isNew: false },
+        { id: 'go-m', value: 256, row: 0, col: 3, isNew: false }
+      ],
+      [
+        { id: 'go-b', value: 1024, row: 1, col: 0, isNew: false },
+        { id: 'go-f', value: 32, row: 1, col: 1, isNew: false },
+        { id: 'go-j', value: 64, row: 1, col: 2, isNew: false },
+        { id: 'go-n', value: 128, row: 1, col: 3, isNew: false }
+      ],
+      [
+        { id: 'go-c', value: 2048, row: 2, col: 0, isNew: false },
+        { id: 'go-g', value: 16, row: 2, col: 1, isNew: false },
+        { id: 'go-k', value: 32, row: 2, col: 2, isNew: false },
+        { id: 'go-o', value: 64, row: 2, col: 3, isNew: false }
+      ],
+      [
+        { id: 'go-d', value: 2048, row: 3, col: 0, isNew: false },
+        { id: 'go-h', value: 8, row: 3, col: 1, isNew: false },
+        { id: 'go-l', value: 16, row: 3, col: 2, isNew: false },
+        { id: 'go-p', value: 32, row: 3, col: 3, isNew: false }
+      ]
+    ],
+    score: 0,
+    bestScore: 4096,
+    moveCount: 75,
+    seed: 'seed-gameover-251022',
+    seedCursor: 0,
+    pendingMoves: [],
+    undoStack: [],
+    status: 'idle',
+    sessionId: 'session-mobile-gameover',
+    lastMoveAt: undefined
+  },
   'fixture-endgame-003': {
     board: [
       [

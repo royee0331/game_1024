@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { useSessionStore } from '../state/sessionStore';
+import { useSessionRestart } from '../state/useSessionRestart';
 
 export const RestartButton: React.FC = () => {
-  const restart = useSessionStore((state) => state.restart);
+  const restart = useSessionRestart('restart-button');
   const status = useSessionStore((state) => state.game.status);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 

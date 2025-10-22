@@ -17,21 +17,28 @@
   the iteration process.
 -->
 
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Language/Version**: TypeScript 5+ (engine + UI)
+**Primary Dependencies**: Vite, React 18+, `packages/core` engine library
+**Storage**: None (in-memory board state only)
+**Testing**: Vitest (unit), Playwright (interaction), Storybook (visual regression)
+**Target Platform**: Desktop browsers (Chromium reference, touch-friendly fallback)
+**Project Type**: Web application with shared packages
+**Performance Goals**: 60 FPS render loop, <80ms p95 input-to-animation latency
+**Constraints**: Pure engine functions, seeded RNG, accessibility & telemetry hooks mandatory
+**Scale/Scope**: Single-player board sessions with replay export support
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- Core engine work is confined to `packages/core` and expressed as pure functions with no
+  timers, DOM access, or implicit globals.
+- Plans specify how RNG seeds are injected, recorded, and exposed for the feature.
+- Test strategy lists required Vitest, Playwright, and Storybook coverage before coding.
+- Performance budget (16ms frame, <80ms latency) is addressed with mitigation steps if at
+  risk.
+- Accessibility controls, telemetry payloads, and logging fields for the feature are
+  identified and mapped to implementation tasks.
 
 ## Project Structure
 
@@ -56,39 +63,23 @@ specs/[###-feature]/
 -->
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
-
-tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
+packages/
+├── core/            # Pure game engine (no DOM)
+└── shared/          # Utilities shared by UI + tests
 
 frontend/
 ├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
+│   ├── components/  # React components + animations
+│   ├── hooks/       # Input + telemetry hooks
+│   ├── scenes/      # Screen compositions
+│   └── state/       # Client-side adapters around core engine
 └── tests/
+    ├── interaction/ # Playwright specs
+    └── visual/      # Storybook snapshot baselines
 
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+tests/
+├── unit/            # Vitest coverage for packages/core
+└── fixtures/        # Seeded board states & RNG transcripts
 ```
 
 **Structure Decision**: [Document the selected structure and reference the real

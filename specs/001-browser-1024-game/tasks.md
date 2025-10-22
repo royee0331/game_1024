@@ -17,10 +17,10 @@
 
 **Purpose**: Establish pnpm workspace, toolchain, and base project layout.
 
-- [ ] T001 Initialize monorepo workspace metadata in `package.json` and `pnpm-workspace.yaml` at repo root to register `packages/*` and `frontend/`.
-- [ ] T002 Author shared TypeScript settings in `tsconfig.base.json` with strict mode and path aliases for `@core`, `@shared`, and `@ui-telemetry`.
-- [ ] T003 [P] Configure linting/formatting by adding `.eslintrc.cjs`, `.prettierrc`, and lint scripts in `package.json`.
-- [ ] T004 [P] Scaffold Vite + React 18 application in `frontend/` with Storybook and Playwright harness entries in `frontend/package.json`.
+- [x] T001 Initialize monorepo workspace metadata in `package.json` and `pnpm-workspace.yaml` at repo root to register `packages/*` and `frontend/`.
+- [x] T002 Author shared TypeScript settings in `tsconfig.base.json` with strict mode and path aliases for `@core`, `@shared`, and `@ui-telemetry`.
+- [x] T003 [P] Configure linting/formatting by adding `.eslintrc.cjs`, `.prettierrc`, and lint scripts in `package.json`.
+- [x] T004 [P] Scaffold Vite + React 18 application in `frontend/` with Storybook and Playwright harness entries in `frontend/package.json`.
 
 ---
 
@@ -28,12 +28,12 @@
 
 **Purpose**: Core infrastructure that MUST be complete before any user story work.
 
-- [ ] T005 Define immutable domain types (`Tile`, `GameState`, `EngineEvent`, `TelemetryPayload`) in `packages/core/src/types.ts` per data-model.md.
-- [ ] T006 [P] Implement seeded PRNG provider and cursor tracker in `packages/core/src/random/prng.ts` with deterministic transcript logging.
-- [ ] T007 [P] Setup Vitest config and initial engine spec harness in `packages/core/vitest.config.ts` and `packages/core/tests/engine.setup.ts`.
-- [ ] T008 Establish LocalStorage persistence adapter with in-memory fallback in `packages/shared/src/storage/localSession.ts`.
-- [ ] T009 [P] Create telemetry batching queue using `navigator.sendBeacon` in `packages/ui-telemetry/src/beaconQueue.ts`.
-- [ ] T010 Seed deterministic fixture JSONs (`fixture-start-001.json`, etc.) in `tests/fixtures/` and expose helper loader in `tests/unit/fixtures.ts`.
+- [x] T005 Define immutable domain types (`Tile`, `GameState`, `EngineEvent`, `TelemetryPayload`) in `packages/core/src/types.ts` per data-model.md.
+- [x] T006 [P] Implement seeded PRNG provider and cursor tracker in `packages/core/src/random/prng.ts` with deterministic transcript logging.
+- [x] T007 [P] Setup Vitest config and initial engine spec harness in `packages/core/vitest.config.ts` and `packages/core/tests/engine.setup.ts`.
+- [x] T008 Establish LocalStorage persistence adapter with in-memory fallback in `packages/shared/src/storage/localSession.ts`.
+- [x] T009 [P] Create telemetry batching queue using `navigator.sendBeacon` in `packages/ui-telemetry/src/beaconQueue.ts`.
+- [x] T010 Seed deterministic fixture JSONs (`fixture-start-001.json`, etc.) in `tests/fixtures/` and expose helper loader in `tests/unit/fixtures.ts`.
 
 **Checkpoint**: Foundation ready – user story implementation can now begin.
 
@@ -47,17 +47,17 @@
 
 ### Tests for User Story 1
 
-- [ ] T011 [P] [US1] Write Vitest move resolution spec in `tests/unit/engine/keyboard-left.spec.ts` asserting deterministic board + score output for `fixture-start-001`.
-- [ ] T012 [P] [US1] Implement Playwright scenario `frontend/tests/interaction/keyboard-move.spec.ts` covering left-arrow merge and latency assertion.
+- [x] T011 [P] [US1] Write Vitest move resolution spec in `tests/unit/engine/keyboard-left.spec.ts` asserting deterministic board + score output for `fixture-start-001`.
+- [x] T012 [P] [US1] Implement Playwright scenario `frontend/tests/interaction/keyboard-move.spec.ts` covering left-arrow merge and latency assertion.
 
 ### Implementation for User Story 1
 
-- [ ] T013 [US1] Implement deterministic move pipeline in `packages/core/src/engine/applyMove.ts` to slide, merge once per tile, and spawn via RNG cursor.
-- [ ] T014 [US1] Add board hash + score formatting helpers in `packages/shared/src/formatters/boardHash.ts` for telemetry payloads.
-- [ ] T015 [US1] Create session controller store in `frontend/src/state/sessionStore.ts` using Zustand to bridge engine results and persistence.
-- [ ] T016 [US1] Build keyboard input hook in `frontend/src/hooks/useKeyboardInput.ts` supporting arrows + WASD with animation gating.
-- [ ] T017 [US1] Render tile grid and merge animations in `frontend/src/components/TileGrid.tsx` using framer-motion springs.
-- [ ] T018 [US1] Queue and flush telemetry events on move completion in `frontend/src/hooks/useTelemetryQueue.ts` leveraging `packages/ui-telemetry`.
+- [x] T013 [US1] Implement deterministic move pipeline in `packages/core/src/engine/applyMove.ts` to slide, merge once per tile, and spawn via RNG cursor.
+- [x] T014 [US1] Add board hash + score formatting helpers in `packages/shared/src/formatters/boardHash.ts` for telemetry payloads.
+- [x] T015 [US1] Create session controller store in `frontend/src/state/sessionStore.ts` using Zustand to bridge engine results and persistence.
+- [x] T016 [US1] Build keyboard input hook in `frontend/src/hooks/useKeyboardInput.ts` supporting arrows + WASD with animation gating.
+- [x] T017 [US1] Render tile grid and merge animations in `frontend/src/components/TileGrid.tsx` using framer-motion springs.
+- [x] T018 [US1] Queue and flush telemetry events on move completion in `frontend/src/hooks/useTelemetryQueue.ts` leveraging `packages/ui-telemetry`.
 
 **Checkpoint**: User Story 1 is fully functional and independently testable.
 

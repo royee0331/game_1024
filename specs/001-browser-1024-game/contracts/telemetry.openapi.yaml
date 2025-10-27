@@ -1,0 +1,82 @@
+openapi: 3.0.3
+info:
+  title: Browser 1024 Telemetry API
+  version: 0.1.0
+  description: Batched telemetry endpoint for move analytics and performance metrics.
+servers:
+  - url: https://telemetry.browser1024.internal
+paths:
+  /telemetry/moves:
+    post:
+      summary: Submit a batch of move telemetry payloads
+      operationId: submitMoveTelemetry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sessionId:
+                  type: string
+                appVersion:
+                  type: string
+                events:
+                  type: array
+                  minItems: 1
+                  maxItems: 25
+                  items:
+                    $ref: '#/components/schemas/TelemetryPayload'
+              required:
+                - sessionId
+                - events
+      responses:
+        '202':
+          description: Batch accepted for processing
+        '400':
+          description: Invalid payload
+components:
+  schemas:
+    TelemetryPayload:
+      type: object
+      properties:
+        moveId:
+          type: string
+        direction:
+          type: string
+          enum: [up, down, left, right]
+        scoreDelta:
+          type: integer
+        boardHash:
+          type: string
+        latencyMs:
+          type: number
+          format: float
+        seed:
+          type: string
+        seedCursor:
+          type: integer
+        platform:
+          type: object
+          properties:
+            userAgent:
+              type: string
+            inputMode:
+              type: string
+              enum: [keyboard, touch, assistive]
+          required:
+            - userAgent
+            - inputMode
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - moveId
+        - direction
+        - scoreDelta
+        - boardHash
+        - latencyMs
+        - seed
+        - seedCursor
+        - platform
+        - timestamp

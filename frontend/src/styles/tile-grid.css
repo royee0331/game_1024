@@ -1,0 +1,66 @@
+.tile-grid {
+  position: relative;
+  border-radius: 18px;
+  background-color: rgba(12, 12, 20, 0.92);
+  padding: var(--tile-gap, 12px);
+  overflow: hidden;
+}
+
+.tile-grid__background {
+  position: absolute;
+  inset: var(--tile-gap, 12px);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: var(--tile-gap, 12px);
+  z-index: 0;
+}
+
+.tile-grid__row {
+  display: contents;
+}
+
+.tile-grid__cell {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+
+.tile {
+  position: absolute;
+  width: var(--tile-size, 86px);
+  height: var(--tile-size, 86px);
+  display: grid;
+  place-items: center;
+  font-size: 32px;
+  font-weight: 700;
+  border-radius: 12px;
+  z-index: 1;
+  color: #0a0a12;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.tile span {
+  pointer-events: none;
+}
+
+.tile--primary {
+  background: linear-gradient(135deg, #faf1c8, #f4da7a);
+}
+
+.tile--secondary {
+  background: linear-gradient(135deg, #f9b16e, #f68080);
+}
+
+.tile--tertiary {
+  background: linear-gradient(135deg, #6bd1ff, #4c9bff);
+}
+
+.tile--quaternary {
+  background: linear-gradient(135deg, #b48eff, #8763ff);
+  color: #fff;
+}
+
+.tile--accent {
+  background: linear-gradient(135deg, #ff6cab, #ff9966);
+  color: #fff;
+}

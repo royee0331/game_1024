@@ -1,0 +1,150 @@
+.game-scene {
+  padding-top: calc(24px + env(safe-area-inset-top));
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+}
+
+.game-scene__header[data-layout='stacked'] .hud__metric {
+  width: min(100%, 320px);
+  margin: 0 auto;
+}
+
+@media (max-width: 480px) {
+  .hud--stacked {
+    gap: 18px;
+  }
+
+  .hud__metric {
+    padding: 14px 18px;
+  }
+
+  .game-scene__title {
+    font-size: 2.125rem;
+  }
+}
+
+.game-modal__dialog {
+  margin: calc(env(safe-area-inset-top) / 2) auto calc(env(safe-area-inset-bottom) / 2);
+  padding-top: calc(24px + env(safe-area-inset-top) / 2);
+  padding-bottom: calc(24px + env(safe-area-inset-bottom) / 1.5);
+  width: min(94vw, 380px);
+}
+
+.game-modal__metrics {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 420px) {
+  .game-modal__metrics {
+    grid-template-columns: repeat(3, minmax(108px, 1fr));
+  }
+}
+
+.mobile-controls {
+  position: fixed;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom) + 16px);
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: repeat(3, 56px);
+  grid-template-rows: repeat(3, 56px);
+  grid-template-areas:
+    ". up ."
+    "left . right"
+    ". down .";
+  gap: 12px;
+  padding: 12px;
+  backdrop-filter: blur(18px);
+  background: rgba(18, 18, 24, 0.72);
+  border-radius: 24px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  pointer-events: auto;
+  z-index: 30;
+}
+
+.mobile-controls[data-visible='false'] {
+  display: none;
+}
+
+.mobile-controls--landscape {
+  left: auto;
+  right: calc(env(safe-area-inset-right) + 24px);
+  bottom: 50%;
+  transform: translateY(50%);
+}
+
+.mobile-controls__button {
+  width: 56px;
+  height: 56px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 16px;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.mobile-controls__button:focus,
+.mobile-controls__button:hover {
+  outline: none;
+  background: rgba(255, 255, 255, 0.24);
+  transform: scale(1.05);
+}
+
+.mobile-controls__button:active {
+  transform: scale(0.96);
+}
+
+.mobile-controls__button[data-test='mobile-control-up'] {
+  grid-area: up;
+}
+
+.mobile-controls__button[data-test='mobile-control-down'] {
+  grid-area: down;
+}
+
+.mobile-controls__button[data-test='mobile-control-left'] {
+  grid-area: left;
+}
+
+.mobile-controls__button[data-test='mobile-control-right'] {
+  grid-area: right;
+}
+
+.mobile-controls-toggle {
+  margin-top: 12px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: none;
+  background: #353a5a;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.2s ease;
+}
+
+.mobile-controls-toggle:hover,
+.mobile-controls-toggle:focus {
+  outline: none;
+  background: #47508a;
+}
+
+@media (min-width: 768px) {
+  .mobile-controls {
+    grid-template-columns: repeat(3, 64px);
+    grid-template-rows: repeat(3, 64px);
+  }
+
+  .mobile-controls__button {
+    width: 64px;
+    height: 64px;
+    font-size: 1.75rem;
+  }
+}

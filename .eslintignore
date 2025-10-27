@@ -1,0 +1,10 @@
+node_modules/
+dist/
+build/
+coverage/
+.vite/
+storybook-static/
+.playwright-report/
+frontend/playwright-report/
+**/*.config.ts
+**/*.config.js

@@ -1,0 +1,39 @@
+{
+  "state": {
+    "board": [
+      [
+        { "id": "t-1", "value": 2, "row": 0, "col": 0, "isNew": false },
+        null,
+        null,
+        { "id": "t-2", "value": 2, "row": 0, "col": 3, "isNew": false }
+      ],
+      [
+        { "id": "t-3", "value": 4, "row": 1, "col": 0, "isNew": false },
+        { "id": "t-4", "value": 4, "row": 1, "col": 1, "isNew": false },
+        null,
+        null
+      ],
+      [
+        null,
+        { "id": "t-5", "value": 2, "row": 2, "col": 1, "isNew": false },
+        null,
+        { "id": "t-6", "value": 2, "row": 2, "col": 3, "isNew": false }
+      ],
+      [
+        null,
+        null,
+        null,
+        null
+      ]
+    ],
+    "score": 0,
+    "bestScore": 0,
+    "moveCount": 0,
+    "seed": "seed-alpha-221022",
+    "seedCursor": 0,
+    "pendingMoves": [],
+    "undoStack": [],
+    "status": "idle",
+    "sessionId": "session-fixture"
+  }
+}

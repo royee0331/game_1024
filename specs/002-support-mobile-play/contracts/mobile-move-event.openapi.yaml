@@ -1,0 +1,94 @@
+openapi: 3.1.0
+info:
+  title: Mobile Move Telemetry
+  version: 1.0.0
+  description: Payload contract for enriched move telemetry emitted from mobile browser sessions.
+paths:
+  /telemetry/move:
+    post:
+      summary: Submit a move telemetry event with mobile metadata.
+      operationId: publishMoveTelemetry
+      tags:
+        - telemetry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MoveTelemetryEvent'
+      responses:
+        '202':
+          description: Event accepted for asynchronous processing.
+        '400':
+          description: Payload validation failed.
+components:
+  schemas:
+    MoveTelemetryEvent:
+      type: object
+      required:
+        - sessionId
+        - moveId
+        - direction
+        - scoreDelta
+        - boardHash
+        - seed
+        - seedCursor
+        - deviceCategory
+        - gestureType
+        - orientation
+        - latencyMs
+        - occurredAt
+      properties:
+        sessionId:
+          type: string
+          description: Unique identifier for the current deterministic session.
+        moveId:
+          type: string
+          description: Deterministic identifier for the move (timestamp + increment).
+        direction:
+          type: string
+          enum: [up, down, left, right]
+          description: Direction of the applied move.
+        scoreDelta:
+          type: integer
+          description: Points gained (or lost) from the move.
+        boardHash:
+          type: string
+          description: Hash of the resulting board used for replay verification.
+        seed:
+          type: string
+          description: RNG seed applied to the current session.
+        seedCursor:
+          type: integer
+          description: Cursor position within the deterministic RNG sequence prior to spawning tiles.
+        deviceCategory:
+          type: string
+          enum: [mobile, desktop]
+          description: Client category; mobile browser support always submits `mobile`.
+        gestureType:
+          type: string
+          enum: [swipe, tap]
+          description: Input method used to trigger the move.
+        orientation:
+          type: string
+          enum: [portrait, landscape]
+          description: Device orientation when the move dispatched.
+        latencyMs:
+          type: number
+          format: float
+          description: Milliseconds between gesture start and move dispatch.
+        resumeAt:
+          type: number
+          format: int64
+          nullable: true
+          description: Epoch timestamp when the session resumed from background, if applicable.
+        occurredAt:
+          type: number
+          format: int64
+          description: Epoch timestamp when the move completed.
+        locale:
+          type: string
+          description: Active locale identifier for context-sensitive telemetry.
+        clientVersion:
+          type: string
+          description: Application version string emitting the event.

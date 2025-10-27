@@ -1,0 +1,115 @@
+openapi: 3.1.0
+info:
+  title: Game 1024 Telemetry Extensions
+  version: 1.0.0
+  description: >-
+    Contracts for restart and game completion telemetry emitted by the mobile HUD and game-over modal.
+servers:
+  - url: https://game1024.example.com
+paths:
+  /api/telemetry/session-restart:
+    post:
+      summary: Emit a session restart event triggered from the game-over modal.
+      operationId: postSessionRestart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionRestartEvent'
+            example:
+              event: session.restart
+              sessionId: "session-abc123"
+              triggeredBy: gameover-modal
+              bestScore: 4096
+              timestamp: 1734892800000
+              locale: zh-CN
+      responses:
+        '204':
+          description: Event accepted for asynchronous processing.
+        '400':
+          description: Invalid payload format.
+  /api/telemetry/gameover:
+    post:
+      summary: Emit a game completion event including final metrics.
+      operationId: postGameOver
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameOverEvent'
+            example:
+              event: game.over
+              sessionId: "session-abc123"
+              score: 4096
+              bestScore: 4096
+              moveCount: 76
+              durationMs: 285000
+              locale: zh-CN
+      responses:
+        '204':
+          description: Event accepted for asynchronous processing.
+        '400':
+          description: Invalid payload format.
+components:
+  schemas:
+    SessionRestartEvent:
+      type: object
+      required:
+        - event
+        - sessionId
+        - triggeredBy
+        - bestScore
+        - timestamp
+      properties:
+        event:
+          type: string
+          const: session.restart
+        sessionId:
+          type: string
+          description: Identifier for the completed session being restarted.
+        triggeredBy:
+          type: string
+          enum: [gameover-modal, restart-button]
+          description: UI entry point used to initiate the restart.
+        bestScore:
+          type: integer
+          minimum: 0
+        timestamp:
+          type: integer
+          format: int64
+          description: Epoch milliseconds when the restart action fired.
+        locale:
+          type: string
+          description: BCP 47 locale for the UI copy shown to the player.
+    GameOverEvent:
+      type: object
+      required:
+        - event
+        - sessionId
+        - score
+        - bestScore
+        - moveCount
+      properties:
+        event:
+          type: string
+          const: game.over
+        sessionId:
+          type: string
+        score:
+          type: integer
+          minimum: 0
+        bestScore:
+          type: integer
+          minimum: 0
+        moveCount:
+          type: integer
+          minimum: 0
+        durationMs:
+          type: integer
+          format: int64
+          description: Milliseconds elapsed since session start.
+        locale:
+          type: string
+          description: BCP 47 locale for localized copy evaluation.
